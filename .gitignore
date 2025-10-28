@@ -8,6 +8,7 @@
 
 # Gradle
 .gradle/
+!gradle/wrapper/gradle-wrapper.jar
 
 # Configuración de IDEs
 .idea/
