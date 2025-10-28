@@ -6,6 +6,9 @@
 /build/
 /target/
 
+# Gradle
+.gradle/
+
 # Configuración de IDEs
 .idea/
 .vscode/
@@ -20,7 +23,7 @@
 Thumbs.db
 
 # Log file
-*.log
+log/*.log
 
 # BlueJ files
 *.ctxt
