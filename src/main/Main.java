@@ -1,6 +1,11 @@
 package main;
 
+import javax.swing.SwingUtilities;
+
 import com.github.felipeucelli.javatube.Youtube;
+
+import gui.MainFrame;
+ 
 
 public class Main {
     public static void main(String[] args) {
@@ -11,5 +16,8 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
+                
+        SwingUtilities.invokeLater(() -> new MainFrame());
+        
     }
 }

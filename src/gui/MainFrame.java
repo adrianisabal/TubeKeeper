@@ -1,10 +1,18 @@
 package gui;
 
-public class MainFrame {
+import javax.swing.JFrame;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+public class MainFrame extends JFrame {
+	
+	public MainFrame() {
+	setSize(1200, 800);
+	setTitle("TubeKeeper");
 
+	setLocationRelativeTo(null);
+	setVisible(true);
+	
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
 	}
-
+	
 }
