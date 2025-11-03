@@ -16,7 +16,7 @@ public class Sidebar extends JPanel {
 		setPreferredSize(new Dimension(750, 80));
 		
 		add(new JButton("Expand"));		
-		//add(new JSeparator());
+		add(new JSeparator());
 		
 		add(new JButton("Playlists Menu"));
 		add(new JButton("History"));

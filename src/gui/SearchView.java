@@ -1,5 +1,13 @@
 package gui;
 
-public class SearchView {
+import java.awt.Dimension;
 
+import javax.swing.JPanel;
+
+public class SearchView extends JPanel {
+
+	public SearchView() {
+		setPreferredSize(new Dimension(1000, 700));
+		
+	}
 }
