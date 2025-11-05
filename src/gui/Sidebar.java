@@ -18,6 +18,8 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -27,129 +29,99 @@ import javax.swing.border.EmptyBorder;
 public class Sidebar extends JPanel {
 	
 	private boolean isExpanded = false;
-	private List<JButton> menuButtons = new ArrayList<>();
-	private JButton expandBut = new JButton("+");
-	private JButton settingsBut = new JButton("Settings");
+	private List<DefaultButton> menuButtons = new ArrayList<>();
+	private DefaultButton expandBut;
+	private Icon iconExpand = new ImageIcon("resources/images/menuBar.png");
+	
+	
 	
 	public Sidebar() {
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setPreferredSize(new Dimension(70, 80));
-		setBackground(new Color(45,45,48));
+		setPreferredSize(new Dimension(70, 750));
+		setBackground(new Color(255,255,255)); //45, 45, 48 COLOR OBSCURE
 		setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-		setMaximumSize(new Dimension(750, 80));
+		setMaximumSize(new Dimension(250, 750));
 		
-		add(Box.createVerticalStrut(10));
-		expandedActionListener();
-		expandBut.setAlignmentX(CENTER_ALIGNMENT);
-		
-		add(expandBut);
-		add(new JSeparator());	
-		
-		String[] names = {"Playlists Menu", "History", "Search", "Video"};
-		createButtons(names);
-		
-		add(Box.createVerticalGlue());
-		
-		
-	}
-	
-	private void createButtons(String[] names) {
-		for (int i = 0; i < names.length ; i++) {
-			
-		JButton newButton = new JButton(names[i]);
-		
-		Dimension pref = new Dimension(248,60);
-		Font font = new Font("Orbit", 0, 21);
-		
-		newButton.setBackground(new Color(45,45,48));
-//		newButton.setForeground(new Color(248, 90, 9));
-		newButton.setForeground(new Color(255, 108, 22));
-		newButton.setFont(font);
-		newButton.setBorder(new RoundedBorder(30));
-
-		
-		newButton.setPreferredSize(pref);
-		newButton.setMaximumSize(pref);
-		newButton.setAlignmentX(CENTER_ALIGNMENT);
-		if (!isExpanded) {
-			newButton.setVisible(false);
-		}
-		
-		if (i != names.length) {
-			add(Box.createRigidArea(new Dimension(0,15)));
-		}
-		menuButtons.add(newButton);
-		add(newButton);
-		}
+		createButtons();
 	}
 	
 	private void toggleSidebar() {
 		isExpanded = !isExpanded;
 		
 		if (isExpanded) {
-			for (JButton but : menuButtons) {
-				but.setVisible(true);
-				setPreferredSize(new Dimension(250, 80));
-				expandBut.setText("Toggle");
+			for (DefaultButton but : menuButtons) {
+				but.setCollapsed(false);
+				setPreferredSize(new Dimension(250, 750));
+				expandBut.setNewDimension(new Dimension(210,60));
+				expandBut.setIcon(iconExpand); //TODO cambiar por el icono
 			}
 		} else {
-			for (JButton but : menuButtons) {
-				but.setVisible(false);
-				setPreferredSize(new Dimension(70, 80));
-				expandBut.setText("+");
+			for (DefaultButton but : menuButtons) {
+				but.setCollapsed(true);
+				setPreferredSize(new Dimension(70, 750));
+				expandBut.setNewDimension(new Dimension(60,60));
+				expandBut.setIcon(iconExpand); // TODO Cambiar por el icono
 			}
 		}
 	}
 	
+	private void createButtons() {
+		expandedActionListener();
+		String[] names = {"Playlists Menu", "History", "Search", "Video"};
+		for (int i = 0; i < names.length ; i++) {
+			
+		DefaultButton newButton = new DefaultButton(names[i]);
+		
+		if (!isExpanded) {
+			newButton.setCollapsed(true);
+		}
+		
+		if (i != names.length) {
+			add(Box.createRigidArea(new Dimension(0,30)));
+		}
+		
+		menuButtons.add(newButton);
+		add(newButton);
+		}
+		
+		add(Box.createVerticalGlue());
+		setSettingsButton();
+	}
+	
+
+	
 	private void expandedActionListener() {
+		
+		expandBut = new DefaultButton(iconExpand, new Dimension(60,60));
+		
 		expandBut.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		    	toggleSidebar();
 		    }
 		});
+
+		add(Box.createVerticalStrut(10));
+		add(expandBut);
+		add(Box.createRigidArea(new Dimension(0,30)));
+		add(new JSeparator());
+		
 	}
 	
 	private void setSettingsButton() {
-		settingsBut.setAlignmentX(CENTER_ALIGNMENT);
-		settingsBut.setBackground(new Color(248, 90, 9));
-		settingsBut.setForeground(new Color(248, 90, 9));
-		settingsBut.setBorder(new RoundedBorder(30));
+		DefaultButton settingsBut = new DefaultButton("Settings");
 		
+		if (!isExpanded) {
+			settingsBut.setCollapsed(true);
+		}
+		
+		menuButtons.add(settingsBut);
+		
+		add(Box.createVerticalStrut(30));
 		add(settingsBut);
-	}
-	
-	
-	
-	// Source - https://stackoverflow.com/questions/423950/rounded-swing-jbutton-using-java
-	// Posted by Lalchand
-	// Retrieved 11/5/2025, License - CC-BY-SA 4.0
-
-	private static class RoundedBorder implements Border {
-
-	    private int radius;
-
-
-	    RoundedBorder(int radius) {
-	        this.radius = radius;
-	    }
-
-
-	    public Insets getBorderInsets(Component c) {
-	        return new Insets(this.radius+1, this.radius+1, this.radius+2, this.radius);
-	    }
-
-
-	    public boolean isBorderOpaque() {
-	        return true;
-	    }
-
-
-	    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-	        g.drawRoundRect(x, y, width-1, height-1, radius, radius);
-	    }
+		add(Box.createVerticalStrut(10));
+		
 	}
 
-	// END - https://stackoverflow.com/questions/423950/rounded-swing-jbutton-using-java
 }
