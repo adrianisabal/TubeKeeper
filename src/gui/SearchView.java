@@ -2,12 +2,15 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 
 import javax.swing.JPanel;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.JLabel;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 
@@ -18,31 +21,37 @@ public class SearchView extends JPanel {
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(1000, 700));
 		
-		add(new JLabel("Quick Downloads"), BorderLayout.CENTER);
+		JLabel title = new JLabel("Quick Downloads");
+		title.setBorder(BorderFactory.createEmptyBorder(10,20,0,0));
+		title.setFont(new Font(null,1, 28));
+		title.setPreferredSize(new Dimension(300,100));
+		add(title, BorderLayout.NORTH);
 		
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridBagLayout());
 		
-		GridBagConstraints gbd = defineConstraints();
+		GridBagConstraints gbc = defineConstraints();
 
-		defineLogo(centerPanel, gbd);
-		defineSearchBar(centerPanel, gbd);
+		defineLogo(centerPanel, gbc);
+		defineSearchBar(centerPanel, gbc);
 				
 		add(centerPanel, BorderLayout.CENTER);
 	}
 	
 	
 	private GridBagConstraints defineConstraints() {
-		GridBagConstraints gbd = new GridBagConstraints();
+		GridBagConstraints gbc = new GridBagConstraints();
 		
-		gbd.gridx = 0;
-		gbd.gridy = 0;
-		gbd.anchor = GridBagConstraints.CENTER;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
 		
-		return gbd;
+		
+		gbc.anchor = GridBagConstraints.CENTER;
+		
+		return gbc;
 	}
 	
-	private void defineLogo(JPanel containerPanel, GridBagConstraints gbd) {
+	private void defineLogo(JPanel containerPanel, GridBagConstraints gbc) {
 		
 		ImageIcon logo = new ImageIcon("resources/images/logo.png");
 		Image image = logo.getImage();
@@ -53,11 +62,11 @@ public class SearchView extends JPanel {
 		logoContainer.setPreferredSize(new Dimension(300,300));
 		logoContainer.setMaximumSize(new Dimension(500,300));
 		
-		containerPanel.add(logoContainer, gbd);
+		containerPanel.add(logoContainer, gbc);
 	}
 	
 	
-	private void defineSearchBar(JPanel containerPanel, GridBagConstraints gbd) {
+	private void defineSearchBar(JPanel containerPanel, GridBagConstraints gbc) {
 		
 		SearchBar searcher = new SearchBar();	
 		searcher.setText("Insert an URL or Search a video by title.");
@@ -66,8 +75,21 @@ public class SearchView extends JPanel {
 		searcher.setPreferredSize(new Dimension(300, 40));
 		searcher.setMaximumSize(new Dimension(500, 80));
 		
-		gbd.gridy = 1;
-		containerPanel.add(searcher, gbd);
+		gbc.gridy = 1;
 
+		containerPanel.add(searcher, gbc);
+		
+		addEmptySeparator(containerPanel, gbc);
+	}
+	
+	private void addEmptySeparator(JPanel containerPanel, GridBagConstraints gbc) {
+		JLabel emptySep = new JLabel();
+		
+		emptySep.setPreferredSize(new Dimension(50, 150));
+		
+		gbc.gridy = 2;
+		
+		containerPanel.add(emptySep, gbc);
+		
 	}
 }

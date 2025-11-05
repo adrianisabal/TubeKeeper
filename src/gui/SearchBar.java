@@ -23,6 +23,7 @@ public class SearchBar extends JPanel {
 		add(txtContainer);
 		
 		txtContainer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
+		txtContainer.setAlignmentY(CENTER_ALIGNMENT);
 		txtContainer.setBackground(null);
 		
 		setBorder(BorderFactory.createLineBorder(new Color(45,45,48)));
