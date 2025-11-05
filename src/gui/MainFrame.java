@@ -7,6 +7,9 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.border.EmptyBorder;
 
+import gui.tools.Sidebar;
+import gui.views.SearchView;
+
 public class MainFrame extends JFrame {
 	
 	public MainFrame() {

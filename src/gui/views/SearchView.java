@@ -1,4 +1,4 @@
-package gui;
+package gui.views;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -8,24 +8,17 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 
 import javax.swing.JPanel;
-import javax.swing.plaf.FontUIResource;
+import gui.tools.SearchBar;
+
 import javax.swing.JLabel;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 
-public class SearchView extends JPanel {
+public class SearchView extends View {
 
 	public SearchView() {
 		
-		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(1000, 700));
-		
-		JLabel title = new JLabel("Quick Downloads");
-		title.setBorder(BorderFactory.createEmptyBorder(10,20,0,0));
-		title.setFont(new Font(null,1, 28));
-		title.setPreferredSize(new Dimension(300,100));
-		add(title, BorderLayout.NORTH);
+		setTitle("Quick Downloads");
 		
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridBagLayout());
