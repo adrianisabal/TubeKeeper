@@ -22,18 +22,19 @@ import javax.swing.border.EmptyBorder;
 
 public class Sidebar extends JPanel {
 	
-	private boolean isExpanded = true; //TODO cambiarla a false porque no queremos que aparezca expandida, pero de momento sí pq no tengo otra cosa hecha
+	private boolean isExpanded = false; //TODO cambiarla a false porque no queremos que aparezca expandida, pero de momento sí pq no tengo otra cosa hecha
 	private List<JButton> menuButtons = new ArrayList<>();
 	private JButton expandBut = new JButton("-");
 	
 	public Sidebar() {
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setPreferredSize(new Dimension(750, 80));
+		setPreferredSize(new Dimension(50, 80));
 		setBackground(new Color(45,45,48));
 		setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
 		setMaximumSize(new Dimension(750, 80));
+		expandedActionListener();
 		
 		add(expandBut);
 		add(new JSeparator());	

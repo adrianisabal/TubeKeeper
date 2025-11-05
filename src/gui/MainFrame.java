@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.border.EmptyBorder;
@@ -15,7 +16,7 @@ public class MainFrame extends JFrame {
 	setLocationRelativeTo(null);
 	setVisible(true);
 	
-	((JComponent) getContentPane()).setBorder(new EmptyBorder(20,20,20,20));
+	((JComponent) getContentPane()).setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 	
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	
