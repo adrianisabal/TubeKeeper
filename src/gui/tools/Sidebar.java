@@ -1,5 +1,6 @@
 package gui.tools;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -7,6 +8,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -31,13 +33,13 @@ public class Sidebar extends JPanel {
 	private boolean isExpanded = false;
 	private List<DefaultButton> menuButtons = new ArrayList<>();
 	private DefaultButton expandBut;
-	private Icon iconExpand = new ImageIcon("resources/images/menuBar.png");
+	private ImageIcon iconExpand = new ImageIcon("resources/images/menuIcon.png");
 	
 	
 	
 	public Sidebar() {
 		
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BorderLayout()); //TODO Cambiar esto a Border Layout
 		setPreferredSize(new Dimension(70, 750));
 		setBackground(new Color(255,255,255)); //45, 45, 48 COLOR OBSCURE
 		setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -47,6 +49,8 @@ public class Sidebar extends JPanel {
 	}
 	
 	private void toggleSidebar() {
+		Image image =  iconExpand.getImage();
+		ImageIcon resizedIcon = new ImageIcon(image.getScaledInstance(250, 250, Image.SCALE_SMOOTH));
 		isExpanded = !isExpanded;
 		
 		if (isExpanded) {
@@ -68,7 +72,7 @@ public class Sidebar extends JPanel {
 	
 	private void createButtons() {
 		expandedActionListener();
-		String[] names = {"Playlists Menu", "History", "Search", "Video"};
+		String[] names = {"Search", "Playlists Menu", "History"};
 		for (int i = 0; i < names.length ; i++) {
 			
 		DefaultButton newButton = new DefaultButton(names[i]);
@@ -94,6 +98,7 @@ public class Sidebar extends JPanel {
 	private void expandedActionListener() {
 		
 		expandBut = new DefaultButton(iconExpand, new Dimension(60,60));
+		expandBut.setBorder(null);		
 		
 		expandBut.addActionListener(new ActionListener() {
 		    @Override
@@ -102,10 +107,10 @@ public class Sidebar extends JPanel {
 		    }
 		});
 
-		add(Box.createVerticalStrut(10));
-		add(expandBut);
-		add(Box.createRigidArea(new Dimension(0,30)));
-		add(new JSeparator());
+		add(Box.createVerticalStrut(10)); //TODO
+		add(expandBut, BorderLayout.NORTH); // TODO Meterlo a la izquierda para meter a la derecha el nombre de TubeKeeper
+		add(Box.createRigidArea(new Dimension(0,30))); //TODO
+		add(new JSeparator()); //TODO
 		
 	}
 	
@@ -118,9 +123,9 @@ public class Sidebar extends JPanel {
 		
 		menuButtons.add(settingsBut);
 		
-		add(Box.createVerticalStrut(30));
-		add(settingsBut);
-		add(Box.createVerticalStrut(10));
+		add(Box.createVerticalStrut(30)); //TODO
+		add(settingsBut, BorderLayout.SOUTH);
+		add(Box.createVerticalStrut(10)); //TODO Tienes que añadir un panel dentro de cada border para poder meter más elementos
 		
 	}
 
