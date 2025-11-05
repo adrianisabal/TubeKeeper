@@ -1,4 +1,4 @@
-package gui;
+package gui.views;
 
 public class PlaylistMenuView {
 	
