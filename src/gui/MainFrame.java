@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.border.EmptyBorder;
 
 import gui.tools.Sidebar;
+import gui.views.DownloadsView;
 import gui.views.SearchView;
 
 public class MainFrame extends JFrame {
@@ -25,8 +26,11 @@ public class MainFrame extends JFrame {
 	Sidebar sidebar = new Sidebar();
 	add(sidebar, BorderLayout.WEST);
 	
-	SearchView search_v = new SearchView();
-	add(search_v, BorderLayout.CENTER);
+	SearchView search = new SearchView();
+	add(search, BorderLayout.CENTER);
+	
+	DownloadsView downloads = new DownloadsView();
+	//add(downloads, BorderLayout.CENTER);
 	
 	setVisible(true);
 	}

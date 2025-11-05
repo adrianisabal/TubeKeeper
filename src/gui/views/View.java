@@ -1,41 +1,82 @@
 package gui.views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class View extends JPanel {
+	private ViewType type;
+	private String title;
+	private JPanel headerPanel;
 	
-	public View() {
-	
-		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(1000, 700));
-		
+	public enum ViewType {
+		MAIN_VIEW, SUB_VIEW
 	}
 	
-	public void setTitle(String title) {
-		JLabel titleContainer = new JLabel();
-		titleContainer.setText(title);
+	public View(ViewType type, String title) {
+		this.type = type;
+		this.title = title;
 		
-		titleContainer.setFont(new Font(null,1,28));
-		titleContainer.setBorder(BorderFactory.createEmptyBorder(10,20,0,0));
+		setLayout(new BorderLayout());
+		setHeaderPanel();
 		
-		add(titleContainer, BorderLayout.NORTH);
+		setPreferredSize(new Dimension(1000, 700));
+		setBorder(BorderFactory.createEmptyBorder(10,20,20,0));
+	}
+		
+	private void setHeaderPanel() {
+		this.headerPanel = new JPanel();
+		this.headerPanel.setLayout(new GridBagLayout());
+		
+		add(this.headerPanel, BorderLayout.NORTH);
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.weightx = 1;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(10, 0, 0, 0);
+		
+		if (this.type.equals(ViewType.MAIN_VIEW)) {
+			setTitle(gbc);
+			
+		} else {
+			setBackButton(gbc);
+		} 
+	}
+	
+	
+	public JPanel getHeaderPanel() {
+		return this.headerPanel;
+	}
+	
+	
+	public void setTitle(GridBagConstraints gbc) {
+		JLabel titleContainer = new JLabel(this.title);
+		
+		titleContainer.setFont(new Font(null,1,28));		
+		titleContainer.setAlignmentX(LEFT_ALIGNMENT);
+		
+		this.headerPanel.add(titleContainer, gbc);
 	}
 
 	
-	public void setBackButton() {
+	public void setBackButton(GridBagConstraints gbc) {
 		JButton back = new JButton();
 		back.setIcon(new ImageIcon("resources/images/searchIcon.png"));
 		
-		add(back, BorderLayout.NORTH);
-
+		this.headerPanel.add(back, gbc);
 	}
 }
 

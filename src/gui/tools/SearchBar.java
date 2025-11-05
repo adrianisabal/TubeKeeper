@@ -9,18 +9,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class SearchBar extends JPanel {
-	private JLabel icon;
-	private JTextField txtContainer;
 	
-	public SearchBar() {
+	public SearchBar(String txt) {
 		
-		JLabel icon = new JLabel();		
-		this.icon = icon;
-		add(icon);
+		JLabel iconContainer = new JLabel();
+		iconContainer.setIcon(new ImageIcon("resources/images/searchIcon.png"));
+		add(iconContainer);
 		
-		JTextField txtContainer = new JTextField();
-		this.txtContainer = txtContainer;
+		JTextField txtContainer = new JTextField(txt);
 		add(txtContainer);
+		
 		
 		txtContainer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
 		txtContainer.setAlignmentY(CENTER_ALIGNMENT);
@@ -29,12 +27,5 @@ public class SearchBar extends JPanel {
 		setBorder(BorderFactory.createLineBorder(new Color(45,45,48)));
 		
 	}
-	
-	public void setIcon(String path) {
-		this.icon.setIcon(new ImageIcon(path));
-	}
-	
-	public void setText(String txt) {
-		this.txtContainer.setText(txt);
-	}
 }
+	

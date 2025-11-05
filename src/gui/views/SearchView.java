@@ -9,6 +9,7 @@ import java.awt.Image;
 
 import javax.swing.JPanel;
 import gui.tools.SearchBar;
+import gui.views.View.ViewType;
 
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -17,8 +18,7 @@ import javax.swing.ImageIcon;
 public class SearchView extends View {
 
 	public SearchView() {
-		
-		setTitle("Quick Downloads");
+		super(ViewType.MAIN_VIEW, "Quick Downloader");
 		
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridBagLayout());
@@ -37,7 +37,6 @@ public class SearchView extends View {
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		
 		
 		gbc.anchor = GridBagConstraints.CENTER;
 		
@@ -61,9 +60,7 @@ public class SearchView extends View {
 	
 	private void defineSearchBar(JPanel containerPanel, GridBagConstraints gbc) {
 		
-		SearchBar searcher = new SearchBar();	
-		searcher.setText("Insert an URL or Search a video by title.");
-		searcher.setIcon("resources/images/searchIcon.png");
+		SearchBar searcher = new SearchBar("Insert an URL or Search a video by title.");	
 				
 		searcher.setPreferredSize(new Dimension(300, 40));
 		searcher.setMaximumSize(new Dimension(500, 80));
