@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 public class JVideoView extends View {
 	
 	public JVideoView() {
-		super(ViewType.SUB_VIEW,"");
+		super(ViewType.SUB_VIEW, null);
 		
 		JPanel videoContainer = new JPanel();
 		videoContainer.setLayout(new BorderLayout());
