@@ -31,8 +31,9 @@ public class Sidebar extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setPreferredSize(new Dimension(750, 80));
 		setBackground(new Color(45,45,48));
-		setBorder(new EmptyBorder(15, 10, 15, 10));
-		
+		setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+		setMaximumSize(new Dimension(750, 80));
 		
 		add(expandBut);
 		add(new JSeparator());	
