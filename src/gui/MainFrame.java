@@ -14,7 +14,6 @@ public class MainFrame extends JFrame {
 	setTitle("TubeKeeper");
 
 	setLocationRelativeTo(null);
-	setVisible(true);
 	
 	((JComponent) getContentPane()).setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 	
@@ -26,6 +25,7 @@ public class MainFrame extends JFrame {
 	SearchView search_v = new SearchView();
 	add(search_v, BorderLayout.CENTER);
 	
+	setVisible(true);
 	}
 	
 }
