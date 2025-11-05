@@ -41,17 +41,14 @@ public class View extends JPanel {
 		this.headerPanel.setLayout(new GridBagLayout());
 		
 		add(this.headerPanel, BorderLayout.NORTH);
-		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.weightx = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.insets = new Insets(10, 0, 0, 0);
+
+		GridBagConstraints gbc = defineConstraints();
 		
 		if (this.type.equals(ViewType.MAIN_VIEW)) {
 			setTitle(gbc);
 			
 		} else {
+			gbc.insets = new Insets(0, 0, 5, 0);
 			setBackButton(gbc);
 		} 
 	}
@@ -62,7 +59,20 @@ public class View extends JPanel {
 	}
 	
 	
-	public void setTitle(GridBagConstraints gbc) {
+	private GridBagConstraints defineConstraints() {
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		gbc.gridx = 0;
+		gbc.weightx = 1;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(10, 0, 0, 0);
+		
+		return gbc;
+	}
+
+	
+	
+	private void setTitle(GridBagConstraints gbc) {
 		JLabel titleContainer = new JLabel(this.title);
 		
 		titleContainer.setFont(new Font(null,1,28));		
@@ -72,8 +82,9 @@ public class View extends JPanel {
 	}
 
 	
-	public void setBackButton(GridBagConstraints gbc) {
+	private void setBackButton(GridBagConstraints gbc) {
 		JButton back = new JButton();
+		// Change Icon for an Arrow Icon
 		back.setIcon(new ImageIcon("resources/images/searchIcon.png"));
 		
 		this.headerPanel.add(back, gbc);

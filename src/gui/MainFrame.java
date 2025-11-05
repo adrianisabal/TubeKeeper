@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import gui.tools.Sidebar;
 import gui.views.DownloadsView;
+import gui.views.JVideoView;
 import gui.views.SearchView;
 
 public class MainFrame extends JFrame {
@@ -31,6 +32,9 @@ public class MainFrame extends JFrame {
 	
 	DownloadsView downloads = new DownloadsView();
 	//add(downloads, BorderLayout.CENTER);
+	
+	JVideoView videoView = new JVideoView();
+	//add(videoView, BorderLayout.CENTER);
 	
 	setVisible(true);
 	}
