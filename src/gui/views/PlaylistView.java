@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
 public class PlaylistView extends View {
 	
 	public PlaylistView() {
-		super(ViewType.SUB_VIEW, null);
+		super(ViewType.SUB_VIEW, "PlayList Name");
 		
 		JLabel playlistName = new JLabel("Playlist Name");
 		

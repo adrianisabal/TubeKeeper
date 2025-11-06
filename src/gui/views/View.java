@@ -19,7 +19,10 @@ import javax.swing.JPanel;
 public class View extends JPanel {
 	private ViewType type;
 	private String title;
+	
 	private JPanel headerPanel;
+	private JLabel titleContainer;
+	private JButton backButton;
 	
 	public enum ViewType {
 		MAIN_VIEW, SUB_VIEW
@@ -50,6 +53,11 @@ public class View extends JPanel {
 		} else {
 			gbc.insets = new Insets(0, 0, 5, 0);
 			setBackButton(gbc);
+			
+			if (this.title != null) {
+				gbc.gridy = 1;
+				setTitle(gbc);
+			}
 		} 
 	}
 	
@@ -73,21 +81,29 @@ public class View extends JPanel {
 	
 	
 	private void setTitle(GridBagConstraints gbc) {
-		JLabel titleContainer = new JLabel(this.title);
+		this.titleContainer = new JLabel(this.title);
 		
-		titleContainer.setFont(new Font(null,1,28));		
-		titleContainer.setAlignmentX(LEFT_ALIGNMENT);
+		this.titleContainer.setFont(new Font(null,1,28));		
+		this.titleContainer.setAlignmentX(LEFT_ALIGNMENT);
 		
 		this.headerPanel.add(titleContainer, gbc);
+	}
+	
+	public JLabel getTitleContainer() {
+		return this.titleContainer;
 	}
 
 	
 	private void setBackButton(GridBagConstraints gbc) {
-		JButton back = new JButton();
+		this.backButton = new JButton();
 		// Change Icon for an Arrow Icon
-		back.setIcon(new ImageIcon("resources/images/searchIcon.png"));
+		this.backButton.setIcon(new ImageIcon("resources/images/searchIcon.png"));
 		
-		this.headerPanel.add(back, gbc);
+		this.headerPanel.add(this.backButton, gbc);
+	}
+	
+	public JButton getBackButton() {
+		return this.backButton;
 	}
 }
 
