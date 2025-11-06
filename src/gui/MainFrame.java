@@ -14,7 +14,6 @@ import gui.tools.Sidebar;
 import gui.views.DownloadsView;
 import gui.views.JVideoView;
 import gui.views.PlaylistMenuView;
-import gui.views.PlaylistView;
 import gui.views.SearchView;
 import gui.views.View;
 
