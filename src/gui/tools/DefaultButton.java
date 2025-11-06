@@ -15,11 +15,11 @@ public class DefaultButton extends JButton{
 
     private int borderRadius = 30;
 
-    private static final Dimension DEFAULT_SIZE = new Dimension(210, 60);
-    private static final Font DEFAULT_FONT = new Font("Orbit", Font.PLAIN, 21);
-    private static final Color DEFAULT_BG = new Color(255,255,255);
-    private static final Color DEFAULT_FG = new Color(255, 108, 22);
-    private static final int DEFAULT_RADIUS = 30;
+    public static final Dimension DEFAULT_SIZE = new Dimension(210, 60);
+    public static final Font DEFAULT_FONT = new Font("Orbit", Font.PLAIN, 21);
+    public static final Color DEFAULT_BG = new Color(255,255,255);
+    public static final Color DEFAULT_FG = new Color(255, 108, 22);
+    public static final int DEFAULT_RADIUS = 30;
 	
 
     public DefaultButton(String text) {
