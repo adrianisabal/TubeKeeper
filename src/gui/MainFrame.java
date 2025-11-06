@@ -14,7 +14,6 @@ import gui.tools.Sidebar;
 import gui.views.DownloadsView;
 import gui.views.JVideoView;
 import gui.views.PlaylistMenuView;
-import gui.views.PlaylistView;
 import gui.views.SearchView;
 import gui.views.SettingsView;
 import gui.views.View;
@@ -54,6 +53,7 @@ public class MainFrame extends JFrame {
         views.put(VIEW_SETTINGS, new SettingsView()); //TODO Crear constructores y la view de settings bien
 
 
+
         contentPanel.add(views.get(VIEW_SEARCH), VIEW_SEARCH);
         contentPanel.add(views.get(VIEW_DOWNLOADS), VIEW_DOWNLOADS);
         contentPanel.add(views.get(VIEW_VIDEO), VIEW_VIDEO);
@@ -67,5 +67,4 @@ public class MainFrame extends JFrame {
     public void showScreen(String id) {
         cardLayout.show(contentPanel, id);
     }
-
 }

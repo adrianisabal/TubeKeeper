@@ -4,14 +4,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Insets;
 
-import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.border.Border;
 
 public class DefaultButton extends JButton{
 	
@@ -155,40 +151,9 @@ public class DefaultButton extends JButton{
     	this.repaint();
     }
     
-	// Source - https://stackoverflow.com/questions/423950/rounded-swing-jbutton-using-java
-		// Posted by Lalchand
-		// Retrieved 11/5/2025, License - CC-BY-SA 4.0
-
-		private static class RoundedBorder implements Border {
-
-		    private int radius;
-
-
-		    RoundedBorder(int radius) {
-		        this.radius = radius;
-		    }
-
-
-		    public Insets getBorderInsets(Component c) {
-		        return new Insets(this.radius+1, this.radius+1, this.radius+2, this.radius);
-		    }
-
-
-		    public boolean isBorderOpaque() {
-		        return true;
-		    }
-
-
-		    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-		        g.drawRoundRect(x, y, width-1, height-1, radius, radius); 
-		    }
-		}
-
 		public void setFont(String string, int plain, int i) {
 			Font font = new Font(string, plain, i);
 			this.setFont(font);
 			
 		}
-
-		// END - https://stackoverflow.com/questions/423950/rounded-swing-jbutton-using-java
 }
