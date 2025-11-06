@@ -2,18 +2,16 @@ package gui.views;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 
 import javax.swing.JPanel;
-import gui.tools.SearchBar;
-import gui.views.View.ViewType;
 
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 
+import utils.ImageUtils;
+import gui.tools.SearchBar;
 
 public class SearchView extends View {
 
@@ -45,10 +43,7 @@ public class SearchView extends View {
 	
 	private void defineLogo(JPanel containerPanel, GridBagConstraints gbc) {
 		
-		ImageIcon logo = new ImageIcon("resources/images/logo.png");
-		Image image = logo.getImage();
-		ImageIcon resizedLogo = new ImageIcon(image.getScaledInstance(250, 250, Image.SCALE_SMOOTH));
-		
+		ImageIcon resizedLogo = ImageUtils.resizeImageIcon(new ImageIcon("resources/images/logo.png"), 250, 250);
 		JLabel logoContainer = new JLabel(resizedLogo);
 
 		logoContainer.setPreferredSize(new Dimension(300,300));
