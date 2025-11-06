@@ -2,12 +2,17 @@ package gui.views;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Color;
+
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Cursor;
 
 import domain.Playlist;
 import utils.ImageUtils;
@@ -31,6 +36,8 @@ public class PlaylistMenuView extends View {
       textPanel.add(new JLabel(p.getTitle(), JLabel.CENTER));
       textPanel.add(new JLabel(p.getAuthor(), JLabel.CENTER));
     
+      addMouseAdapter(plPanel, textPanel);
+
       plPanel.add(textPanel, BorderLayout.SOUTH);
       mainPanel.add(plPanel);
     }
@@ -43,4 +50,25 @@ public class PlaylistMenuView extends View {
       this.playlists.add(new Playlist("Playlist " + i, new ImageIcon("resources/images/logo.png")));
     }
   }
+  
+  private void addMouseAdapter(JPanel plPanel, JPanel textPanel) {
+    Color originalBg = plPanel.getBackground();
+    Color originalTextBg = textPanel.getBackground();
+    
+    plPanel.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            plPanel.setBackground(new Color(200, 200, 200));
+            textPanel.setBackground(new Color(200, 200, 200));
+            plPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        }
+        
+        @Override
+        public void mouseExited(MouseEvent e) {
+            plPanel.setBackground(originalBg);
+            textPanel.setBackground(originalTextBg);
+            plPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+    });
+  } 
 }
