@@ -4,183 +4,201 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
+import gui.MainFrame;
+
 public class Sidebar extends JPanel {
-	
-	private boolean isExpanded = false;
-	private List<DefaultButton> menuButtons = new ArrayList<>();
-	private DefaultButton expandBut;
-	private ImageIcon iconExpand = new ImageIcon("resources/images/menuIcon.png");
-	private ImageIcon iconSettings = new ImageIcon("resources/images/settingsIcon.png");
-	private JPanel centerPanel;
-	private JPanel northPanel;
-	private JPanel southPanel;
-	private JLabel progText;
-	
-	
-	public Sidebar() {
-		
-		setLayout(new BorderLayout()); 
-		setPreferredSize(new Dimension(70, 750));
-		setBackground(new Color(255,255,255)); //45, 45, 48 COLOR OBSCURE
-		setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-		setMaximumSize(new Dimension(250, 750));
-		
-		northPanel = new JPanel();
-	    northPanel.setOpaque(false);
-	    northPanel.setLayout(new BorderLayout());
-	    add(northPanel, BorderLayout.NORTH);
 
-	    centerPanel = new JPanel(new BorderLayout());
-	    centerPanel.setOpaque(false);
-	    add(centerPanel, BorderLayout.CENTER);
+    private final MainFrame mainFrame; 
+    private boolean isExpanded = false;
+    private List<DefaultButton> menuButtons = new ArrayList<>();
+    private DefaultButton expandBut;
+    private ImageIcon iconExpand = new ImageIcon("resources/images/menuIcon.png");
+    private ImageIcon iconSettings = new ImageIcon("resources/images/settingsIcon.png");
+    private JPanel centerPanel;
+    private JPanel northPanel;
+    private JPanel southPanel;
+    private JLabel progText;
 
-	    southPanel = new JPanel();
-	    southPanel.setOpaque(false);
-	    southPanel.setLayout(new BorderLayout());
-	    add(southPanel, BorderLayout.SOUTH);
-		
-		createButtons();
-	}
-	
-	
-	private void createButtons() {
-	    expandedActionListener();
+ 
+    public Sidebar(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
 
-	    JSeparator sep = new JSeparator();
-	    sep.setOpaque(true);
-	    sep.setPreferredSize(new Dimension(1, 8));
-	    northPanel.add(sep, BorderLayout.SOUTH);
+        setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(70, 750));
+        setBackground(new Color(255, 255, 255));
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setMaximumSize(new Dimension(250, 750));
 
-	    String[] names = {"Quick Download", "Playlists Menu", "History"};
+        northPanel = new JPanel();
+        northPanel.setOpaque(false);
+        northPanel.setLayout(new BorderLayout());
+        add(northPanel, BorderLayout.NORTH);
 
-	    JPanel listPanel = new JPanel(new java.awt.GridBagLayout()); 
+        centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
+        add(centerPanel, BorderLayout.CENTER);
 
-	    java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
-	    gbc.gridx = 0;
-	    gbc.weightx = 1.0;
-	    gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-	    gbc.insets = new java.awt.Insets(0, 0, 12, 0);
+        southPanel = new JPanel();
+        southPanel.setOpaque(false);
+        southPanel.setLayout(new BorderLayout());
+        add(southPanel, BorderLayout.SOUTH);
 
-	    centerPanel.removeAll();
-	    centerPanel.setOpaque(false);
+        createButtons();
+    }
 
-	    int row = 0;
-	    for (String name : names) {
-	        DefaultButton newButton = new DefaultButton(name);
-	        if (!isExpanded) {
-	            newButton.setCollapsed(true);
-	        }
-	        applyButtonSize(newButton);
+    private void createButtons() {
+        expandedActionListener();
 
-	        menuButtons.add(newButton);
+        JSeparator sep = new JSeparator();
+        sep.setOpaque(true);
+        sep.setPreferredSize(new Dimension(1, 8));
+        northPanel.add(sep, BorderLayout.SOUTH);
 
-	        gbc.gridy = row++;
-	        listPanel.add(newButton, gbc);
-	    }
+        String[] names = {"Quick Download", "Playlists Menu", "Downloads"};
+        String[] ids   = {MainFrame.VIEW_SEARCH, MainFrame.VIEW_PLAYLISTS, MainFrame.VIEW_DOWNLOADS};
 
-	    gbc.gridy = row;
-	    gbc.weighty = 1.0;
-	    gbc.fill = java.awt.GridBagConstraints.BOTH;
-	    JPanel filler = new JPanel();
-	    filler.setOpaque(false);
-	    listPanel.add(filler, gbc);
+        JPanel listPanel = new JPanel(new java.awt.GridBagLayout());
+        listPanel.setOpaque(false);
 
-	    centerPanel.add(listPanel, BorderLayout.CENTER);
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.weightx = 1.0;
+        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gbc.insets = new java.awt.Insets(0, 0, 12, 0);
 
-	    setSettingsButton();
-	    createProgText();
+        centerPanel.removeAll();
+        centerPanel.setOpaque(false);
 
-	    revalidate();
-	    repaint();
-	}
+        int row = 0;
+        for (int i = 0; i < names.length; i++) {
+            DefaultButton newButton = new DefaultButton(names[i]);
+            if (!isExpanded) {
+                newButton.setCollapsed(true);
+            }
+            applyButtonSize(newButton);
 
-	private void applyButtonSize(DefaultButton b) {
-	    int height = 40;
-	    int width = isExpanded ? 210 : 60; 
-	    java.awt.Dimension pref = new java.awt.Dimension(width, height);
-	    b.setPreferredSize(pref);
-	    b.setMinimumSize(new java.awt.Dimension(50, height));
-	    b.setMaximumSize(new java.awt.Dimension(Integer.MAX_VALUE, height));
-	}
-	
-	
-	private void expandedActionListener() {
-		
-		expandBut = new DefaultButton(iconExpand, new Dimension(60,60));
-		expandBut.setBorder(null);		
-		
-		expandBut.addActionListener(new ActionListener() {
-		    @Override
-		    public void actionPerformed(ActionEvent e) {
-		    	toggleSidebar();
-		    }
-		});
+            newButton.setActionCommand(ids[i]);
 
-		northPanel.add(expandBut, BorderLayout.WEST);
-		
-	}
-	
-	private void setSettingsButton() {
-		DefaultButton settingsBut = new DefaultButton(iconSettings);
-		settingsBut.setBorder(null);
-		
-		if (!isExpanded) {
-			settingsBut.setCollapsed(true);
-		}
-		
-		menuButtons.add(settingsBut);
-		
-		southPanel.add(settingsBut, BorderLayout.CENTER);
-		southPanel.add(new JPanel(null), BorderLayout.SOUTH);
-		
-		revalidate();
-		repaint();
-		
-	}
+            newButton.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    String id = ((javax.swing.AbstractButton) e.getSource()).getActionCommand();
+                    mainFrame.showScreen(id);
+                }
+            });
 
-	private void toggleSidebar() {
-	    isExpanded = !isExpanded;
+            menuButtons.add(newButton);
 
-	    if (isExpanded) {
-	        setPreferredSize(new Dimension(250, 750));
-	        expandBut.setNewDimension(new Dimension(60, 60));
-	        expandBut.setIcon(iconExpand);
-	        progText.setText("TubeKeeper");
-	        for (DefaultButton but : menuButtons) {
-	            but.setCollapsed(false);
-	            applyButtonSize(but);
-	        }
-	    } else {
-	        setPreferredSize(new Dimension(70, 750));
-	        expandBut.setNewDimension(new Dimension(60, 60));
-	        expandBut.setIcon(iconExpand);
-	        progText.setText("");
-	        for (DefaultButton but : menuButtons) {
-	            but.setCollapsed(true);
-	            applyButtonSize(but);
-	        }
-	    }
+            gbc.gridy = row++;
+            listPanel.add(newButton, gbc);
+        }
 
-	    revalidate();
-	    repaint();
-	}
-	
-	private void createProgText() {
-		progText = new JLabel("");
-		progText.setFont(new Font("Monospaced", 3, 15));
-		northPanel.add(progText, BorderLayout.EAST);
-	}
+        gbc.gridy = row;
+        gbc.weighty = 1.0;
+        gbc.fill = java.awt.GridBagConstraints.BOTH;
+        JPanel filler = new JPanel();
+        filler.setOpaque(false);
+        listPanel.add(filler, gbc);
+
+        centerPanel.add(listPanel, BorderLayout.CENTER);
+
+        setSettingsButton();
+        createProgText();
+
+        revalidate();
+        repaint();
+    }
+
+    private void applyButtonSize(DefaultButton b) {
+        int height = 40;
+        int width = isExpanded ? 210 : 60;
+        java.awt.Dimension pref = new java.awt.Dimension(width, height);
+        b.setPreferredSize(pref);
+        b.setMinimumSize(new java.awt.Dimension(50, height));
+        b.setMaximumSize(new java.awt.Dimension(Integer.MAX_VALUE, height));
+    }
+
+    private void expandedActionListener() {
+        expandBut = new DefaultButton(iconExpand, new Dimension(60, 60));
+        expandBut.setBorder(null);
+
+        expandBut.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                toggleSidebar();
+            }
+        });
+
+        northPanel.add(expandBut, BorderLayout.WEST);
+    }
+
+    private void setSettingsButton() {
+        DefaultButton settingsBut = new DefaultButton(iconSettings);
+        settingsBut.setBorder(null);
+
+        if (!isExpanded) {
+            settingsBut.setCollapsed(true);
+        }
+
+        settingsBut.setActionCommand(MainFrame.VIEW_VIDEO);
+        settingsBut.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                String id = ((javax.swing.AbstractButton) e.getSource()).getActionCommand();
+                mainFrame.showScreen(id);
+            }
+        });
+
+        menuButtons.add(settingsBut);
+
+        southPanel.add(settingsBut, BorderLayout.CENTER);
+        JPanel spacer = new JPanel(null);
+        spacer.setOpaque(false);
+        southPanel.add(spacer, BorderLayout.SOUTH);
+
+        revalidate();
+        repaint();
+    }
+
+    private void toggleSidebar() {
+        isExpanded = !isExpanded;
+
+        if (isExpanded) {
+            setPreferredSize(new Dimension(250, 750));
+            expandBut.setNewDimension(new Dimension(60, 60));
+            expandBut.setIcon(iconExpand);
+            if (progText != null) progText.setText("TubeKeeper");
+            for (DefaultButton but : menuButtons) {
+                but.setCollapsed(false);
+                applyButtonSize(but);
+            }
+        } else {
+            setPreferredSize(new Dimension(70, 750));
+            expandBut.setNewDimension(new Dimension(60, 60));
+            expandBut.setIcon(iconExpand);
+            if (progText != null) progText.setText("");
+            for (DefaultButton but : menuButtons) {
+                but.setCollapsed(true);
+                applyButtonSize(but);
+            }
+        }
+
+        revalidate();
+        repaint();
+    }
+
+    private void createProgText() {
+        progText = new JLabel("");
+        progText.setFont(new Font("Monospaced", Font.ITALIC, 15));
+        northPanel.add(progText, BorderLayout.EAST);
+    }
 }
