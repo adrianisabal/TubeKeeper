@@ -149,7 +149,7 @@ public class Sidebar extends JPanel {
             settingsBut.setCollapsed(true);
         }
 
-        settingsBut.setActionCommand(MainFrame.VIEW_VIDEO);
+        settingsBut.setActionCommand(MainFrame.VIEW_SETTINGS);
         settingsBut.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
