@@ -36,7 +36,7 @@ public class PlaylistMenuView extends View {
       textPanel.add(new JLabel(p.getTitle(), JLabel.CENTER));
       textPanel.add(new JLabel(p.getAuthor(), JLabel.CENTER));
     
-      addHoverEffect(plPanel, textPanel);
+      addMouseAdapter(plPanel, textPanel);
 
       plPanel.add(textPanel, BorderLayout.SOUTH);
       mainPanel.add(plPanel);
@@ -51,7 +51,7 @@ public class PlaylistMenuView extends View {
     }
   }
   
-  private void addHoverEffect(JPanel plPanel, JPanel textPanel) {
+  private void addMouseAdapter(JPanel plPanel, JPanel textPanel) {
     Color originalBg = plPanel.getBackground();
     Color originalTextBg = textPanel.getBackground();
     
@@ -70,5 +70,5 @@ public class PlaylistMenuView extends View {
             plPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
     });
-}
+  } 
 }

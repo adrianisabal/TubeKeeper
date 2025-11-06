@@ -6,12 +6,20 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.Insets;
+
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractButton;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+
 
 import gui.MainFrame;
 
@@ -66,14 +74,14 @@ public class Sidebar extends JPanel {
         String[] names = {"Quick Download", "Playlists Menu", "Downloads"};
         String[] ids   = {MainFrame.VIEW_SEARCH, MainFrame.VIEW_PLAYLISTS, MainFrame.VIEW_DOWNLOADS};
 
-        JPanel listPanel = new JPanel(new java.awt.GridBagLayout());
+        JPanel listPanel = new JPanel(new GridBagLayout());
         listPanel.setOpaque(false);
 
-        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.weightx = 1.0;
-        gbc.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gbc.insets = new java.awt.Insets(0, 0, 12, 0);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 0, 12, 0);
 
         centerPanel.removeAll();
         centerPanel.setOpaque(false);
@@ -88,10 +96,10 @@ public class Sidebar extends JPanel {
 
             newButton.setActionCommand(ids[i]);
 
-            newButton.addActionListener(new java.awt.event.ActionListener() {
+            newButton.addActionListener(new ActionListener() {
                 @Override
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    String id = ((javax.swing.AbstractButton) e.getSource()).getActionCommand();
+                public void actionPerformed(ActionEvent e) {
+                    String id = ((AbstractButton) e.getSource()).getActionCommand();
                     mainFrame.showScreen(id);
                 }
             });
@@ -104,7 +112,7 @@ public class Sidebar extends JPanel {
 
         gbc.gridy = row;
         gbc.weighty = 1.0;
-        gbc.fill = java.awt.GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         JPanel filler = new JPanel();
         filler.setOpaque(false);
         listPanel.add(filler, gbc);
@@ -121,19 +129,19 @@ public class Sidebar extends JPanel {
     private void applyButtonSize(DefaultButton b) {
         int height = 40;
         int width = isExpanded ? 210 : 60;
-        java.awt.Dimension pref = new java.awt.Dimension(width, height);
+        Dimension pref = new Dimension(width, height);
         b.setPreferredSize(pref);
-        b.setMinimumSize(new java.awt.Dimension(50, height));
-        b.setMaximumSize(new java.awt.Dimension(Integer.MAX_VALUE, height));
+        b.setMinimumSize(new Dimension(50, height));
+        b.setMaximumSize(new Dimension(Integer.MAX_VALUE, height));
     }
 
     private void expandedActionListener() {
         expandBut = new DefaultButton(iconExpand, new Dimension(60, 60));
         expandBut.setBorder(null);
 
-        expandBut.addActionListener(new java.awt.event.ActionListener() {
+        expandBut.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
                 toggleSidebar();
             }
         });
@@ -150,10 +158,10 @@ public class Sidebar extends JPanel {
         }
 
         settingsBut.setActionCommand(MainFrame.VIEW_SETTINGS);
-        settingsBut.addActionListener(new java.awt.event.ActionListener() {
+        settingsBut.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                String id = ((javax.swing.AbstractButton) e.getSource()).getActionCommand();
+            public void actionPerformed(ActionEvent e) {
+                String id = ((AbstractButton) e.getSource()).getActionCommand();
                 mainFrame.showScreen(id);
             }
         });
