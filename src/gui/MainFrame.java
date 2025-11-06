@@ -19,32 +19,6 @@ import gui.views.View;
 
 public class MainFrame extends JFrame {
 
-<<<<<<< HEAD
-	setLocationRelativeTo(null);
-	
-	((JComponent) getContentPane()).setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-	
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	
-	Sidebar sidebar = new Sidebar();
-	add(sidebar, BorderLayout.WEST);
-	
-	SearchView search = new SearchView();
-	add(search, BorderLayout.CENTER);
-	
-	DownloadsView downloads = new DownloadsView();
-	//add(downloads, BorderLayout.CENTER);
-	
-	JVideoView videoView = new JVideoView();
-	//add(videoView, BorderLayout.CENTER);
-	
-	PlaylistView playlistView = new PlaylistView();
-	//add(playlistView, BorderLayout.CENTER);
-	
-	setVisible(true);
-	}
-	
-=======
     public static final String VIEW_SEARCH     = "SEARCH";
     public static final String VIEW_DOWNLOADS  = "DOWNLOADS";
     public static final String VIEW_PLAYLISTS  = "PLAYLISTS";
@@ -86,5 +60,4 @@ public class MainFrame extends JFrame {
     public void showScreen(String id) {
         cardLayout.show(contentPanel, id);
     }
->>>>>>> branch 'main' of git@github.com:adrianisabal/TubeKeeper.git
 }
