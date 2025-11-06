@@ -77,14 +77,13 @@ public class SettingsView extends View{
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		
-		JPanel dataStealPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
 		JCheckBox dataSteal = new JCheckBox("Let us share your data", true);
 		centerPanel.add(dataSteal, gbc);
 		
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.fill = GridBagConstraints.NONE;
-		gbc.anchor = GridBagConstraints.EAST;
+		gbc.anchor = GridBagConstraints.WEST;
 		gbc.weightx = 0.0;
 		
 		JButton save = new JButton("Save configuration data");

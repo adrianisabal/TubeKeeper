@@ -10,10 +10,13 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import domain.Playlist;
+
 import gui.tools.Sidebar;
 import gui.views.DownloadsView;
 import gui.views.JVideoView;
 import gui.views.PlaylistMenuView;
+import gui.views.PlaylistView;
 import gui.views.SearchView;
 import gui.views.SettingsView;
 import gui.views.View;
@@ -50,7 +53,7 @@ public class MainFrame extends JFrame {
         views.put(VIEW_DOWNLOADS, new DownloadsView());
         views.put(VIEW_VIDEO, new JVideoView());
         views.put(VIEW_PLAYLISTS, new PlaylistMenuView());
-        views.put(VIEW_SETTINGS, new SettingsView()); //TODO Crear constructores y la view de settings bien
+        views.put(VIEW_SETTINGS, new SettingsView());
 
 
 
@@ -66,5 +69,18 @@ public class MainFrame extends JFrame {
 
     public void showScreen(String id) {
         cardLayout.show(contentPanel, id);
+    }
+    
+    public void showPlaylist(Playlist playlist) {
+        String id = "PLAYLIST:" + System.identityHashCode(playlist);
+
+        if (!views.containsKey(id)) {
+            PlaylistView pv = new PlaylistView(playlist);
+            views.put(id, pv);
+            contentPanel.add(pv, id);
+        }
+
+        previous = VIEW_PLAYLISTS;
+        showScreen(id);
     }
 }

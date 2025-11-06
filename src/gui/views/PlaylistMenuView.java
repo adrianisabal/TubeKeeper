@@ -2,6 +2,7 @@ package gui.views;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.Color;
 
 import java.util.ArrayList;
@@ -10,11 +11,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Cursor;
 
 import domain.Playlist;
+import gui.MainFrame;
 import utils.ImageUtils;
 
 public class PlaylistMenuView extends View {
@@ -22,7 +26,7 @@ public class PlaylistMenuView extends View {
   private ArrayList<Playlist> playlists = new ArrayList<>();
 
   public PlaylistMenuView() {
-    super(ViewType.MAIN_VIEW, "PlaylistMenuView");
+    super(ViewType.MAIN_VIEW, "Playlists");
     generatePlaylists();
     JPanel mainPanel = new JPanel(new GridLayout((int) (Math.ceil(playlists.size()/3.0)), 3, 20, 20));
     for (Playlist p : playlists) {
@@ -36,22 +40,23 @@ public class PlaylistMenuView extends View {
       textPanel.add(new JLabel(p.getTitle(), JLabel.CENTER));
       textPanel.add(new JLabel(p.getAuthor(), JLabel.CENTER));
     
-      addMouseAdapter(plPanel, textPanel);
+      addMouseAdapter(plPanel, textPanel, p);
 
       plPanel.add(textPanel, BorderLayout.SOUTH);
       mainPanel.add(plPanel);
     }
     JScrollPane plScrollPanel = new JScrollPane(mainPanel);
+    plScrollPanel.getVerticalScrollBar().setUnitIncrement(10);
     this.add(plScrollPanel);
   }
 
   private void generatePlaylists() {
      for (int i = 0; i < 20; i++) {
-      this.playlists.add(new Playlist("Playlist " + i, new ImageIcon("resources/images/logo.png")));
+      this.playlists.add(new Playlist("Playlist " + i, "Autor " + i, new ImageIcon("resources/images/logo.png"))); // Pongo autor pa probar a ver si funciona el constructor
     }
   }
   
-  private void addMouseAdapter(JPanel plPanel, JPanel textPanel) {
+  private void addMouseAdapter(JPanel plPanel, JPanel textPanel, Playlist playlist) {
     Color originalBg = plPanel.getBackground();
     Color originalTextBg = textPanel.getBackground();
     
@@ -68,6 +73,14 @@ public class PlaylistMenuView extends View {
             plPanel.setBackground(originalBg);
             textPanel.setBackground(originalTextBg);
             plPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+        
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Window w = SwingUtilities.getWindowAncestor(plPanel);
+            if (w instanceof MainFrame) {
+              ((MainFrame) w).showPlaylist(playlist);
+            }
         }
     });
   } 

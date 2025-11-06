@@ -7,19 +7,16 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Insets;
-
-
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractButton;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-
 
 import gui.MainFrame;
 
@@ -29,6 +26,7 @@ public class Sidebar extends JPanel {
     private boolean isExpanded = false;
     private List<DefaultButton> menuButtons = new ArrayList<>();
     private DefaultButton expandBut;
+    private DefaultButton settingsBut;            
     private ImageIcon iconExpand = new ImageIcon("resources/images/menuIcon.png");
     private ImageIcon iconSettings = new ImageIcon("resources/images/settingsIcon.png");
     private JPanel centerPanel;
@@ -36,7 +34,6 @@ public class Sidebar extends JPanel {
     private JPanel southPanel;
     private JLabel progText;
 
- 
     public Sidebar(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
 
@@ -90,12 +87,11 @@ public class Sidebar extends JPanel {
         for (int i = 0; i < names.length; i++) {
             DefaultButton newButton = new DefaultButton(names[i]);
             if (!isExpanded) {
-                newButton.setCollapsed(true);
+                newButton.setCollapsed(true);  
             }
             applyButtonSize(newButton);
 
             newButton.setActionCommand(ids[i]);
-
             newButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -105,7 +101,6 @@ public class Sidebar extends JPanel {
             });
 
             menuButtons.add(newButton);
-
             gbc.gridy = row++;
             listPanel.add(newButton, gbc);
         }
@@ -150,12 +145,11 @@ public class Sidebar extends JPanel {
     }
 
     private void setSettingsButton() {
-        DefaultButton settingsBut = new DefaultButton(iconSettings);
+        settingsBut = new DefaultButton(iconSettings);
         settingsBut.setBorder(null);
 
-        if (!isExpanded) {
-            settingsBut.setCollapsed(true);
-        }
+        applyButtonSize(settingsBut);
+
 
         settingsBut.setActionCommand(MainFrame.VIEW_SETTINGS);
         settingsBut.addActionListener(new ActionListener() {
@@ -166,9 +160,8 @@ public class Sidebar extends JPanel {
             }
         });
 
-        menuButtons.add(settingsBut);
-
         southPanel.add(settingsBut, BorderLayout.CENTER);
+
         JPanel spacer = new JPanel(null);
         spacer.setOpaque(false);
         southPanel.add(spacer, BorderLayout.SOUTH);
@@ -185,19 +178,26 @@ public class Sidebar extends JPanel {
             expandBut.setNewDimension(new Dimension(60, 60));
             expandBut.setIcon(iconExpand);
             if (progText != null) progText.setText("TubeKeeper");
+
             for (DefaultButton but : menuButtons) {
                 but.setCollapsed(false);
                 applyButtonSize(but);
             }
+
+            applyButtonSize(settingsBut);
+
         } else {
             setPreferredSize(new Dimension(70, 750));
             expandBut.setNewDimension(new Dimension(60, 60));
             expandBut.setIcon(iconExpand);
             if (progText != null) progText.setText("");
+
             for (DefaultButton but : menuButtons) {
-                but.setCollapsed(true);
+                but.setCollapsed(true);   
                 applyButtonSize(but);
             }
+            
+            applyButtonSize(settingsBut);
         }
 
         revalidate();

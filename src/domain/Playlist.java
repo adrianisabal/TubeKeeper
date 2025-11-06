@@ -12,6 +12,11 @@ public class Playlist {
 
   public Playlist() {}
 
+  public ArrayList<Video> getVideos() {
+	return videos;
+}
+
+
   public Playlist(String title) {
     this.title = title;
   }
