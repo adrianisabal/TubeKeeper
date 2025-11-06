@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import gui.tools.Sidebar;
 import gui.views.DownloadsView;
 import gui.views.JVideoView;
+import gui.views.PlaylistMenuView;
 import gui.views.PlaylistView;
 import gui.views.SearchView;
 import gui.views.View;
@@ -46,7 +47,7 @@ public class MainFrame extends JFrame {
         views.put(VIEW_SEARCH, new SearchView());
         views.put(VIEW_DOWNLOADS, new DownloadsView());
         views.put(VIEW_VIDEO, new JVideoView());
-        views.put(VIEW_PLAYLISTS, new PlaylistView());
+        views.put(VIEW_PLAYLISTS, new PlaylistMenuView());
 
         contentPanel.add(views.get(VIEW_SEARCH), VIEW_SEARCH);
         contentPanel.add(views.get(VIEW_DOWNLOADS), VIEW_DOWNLOADS);
