@@ -60,5 +60,5 @@ public class MainFrame extends JFrame {
     public void showScreen(String id) {
         cardLayout.show(contentPanel, id);
     }
->>>>>>> branch 'main' of git@github.com:adrianisabal/TubeKeeper.git
+
 }
