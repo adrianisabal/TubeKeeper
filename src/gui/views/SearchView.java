@@ -18,7 +18,7 @@ import javax.swing.ImageIcon;
 public class SearchView extends View {
 
 	public SearchView() {
-		super(ViewType.MAIN_VIEW, "Quick Downloader");
+		super(ViewType.MAIN_VIEW, "Quick Download");
 		
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridBagLayout());

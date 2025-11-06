@@ -9,6 +9,7 @@ import java.awt.Insets;
 
 import javax.swing.Box;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.border.Border;
 
@@ -27,6 +28,22 @@ public class DefaultButton extends JButton{
 
     public DefaultButton(String text) {
         super(text);
+
+        this.setPreferredSize(DEFAULT_SIZE);
+        this.setMaximumSize(DEFAULT_SIZE);
+        this.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        this.setBackground(DEFAULT_BG);
+        this.setForeground(DEFAULT_FG);
+        this.setFont(DEFAULT_FONT);
+
+        this.setFocusPainted(false);
+        this.setOpaque(true);
+        this.setBorder(new RoundedBorder(DEFAULT_RADIUS));
+    }
+    
+    public DefaultButton(ImageIcon icon) {
+        super(icon);
 
         this.setPreferredSize(DEFAULT_SIZE);
         this.setMaximumSize(DEFAULT_SIZE);
