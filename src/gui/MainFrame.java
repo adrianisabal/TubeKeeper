@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
 	add(sidebar, BorderLayout.WEST);
 	
 	SearchView search = new SearchView();
-	//add(search, BorderLayout.CENTER);
+	add(search, BorderLayout.CENTER);
 	
 	DownloadsView downloads = new DownloadsView();
 	//add(downloads, BorderLayout.CENTER);
@@ -38,7 +38,7 @@ public class MainFrame extends JFrame {
 	//add(videoView, BorderLayout.CENTER);
 	
 	PlaylistView playlistView = new PlaylistView();
-	add(playlistView, BorderLayout.CENTER);
+	//add(playlistView, BorderLayout.CENTER);
 	
 	setVisible(true);
 	}
