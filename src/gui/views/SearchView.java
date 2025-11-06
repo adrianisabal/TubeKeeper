@@ -47,7 +47,7 @@ public class SearchView extends View {
 		JLabel logoContainer = new JLabel(resizedLogo);
 
 		logoContainer.setPreferredSize(new Dimension(300,300));
-		logoContainer.setMaximumSize(new Dimension(500,300));
+		logoContainer.setMaximumSize(new Dimension(500,500));
 		
 		containerPanel.add(logoContainer, gbc);
 	}
@@ -55,10 +55,10 @@ public class SearchView extends View {
 	
 	private void defineSearchBar(JPanel containerPanel, GridBagConstraints gbc) {
 		
-		SearchBar searcher = new SearchBar("Insert an URL or Search a video by title.");	
+		SearchBar searcher = new SearchBar("Insert an URL or Search a video by title");	
 				
-		searcher.setPreferredSize(new Dimension(300, 40));
-		searcher.setMaximumSize(new Dimension(500, 80));
+		//searcher.setPreferredSize(new Dimension(300, 40));
+		//searcher.setMaximumSize(new Dimension(500, 80));
 		
 		gbc.gridy = 1;
 
