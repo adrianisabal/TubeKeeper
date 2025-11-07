@@ -46,7 +46,7 @@ public class PlaylistMenuView extends View {
       mainPanel.add(plPanel);
     }
     JScrollPane plScrollPanel = new JScrollPane(mainPanel);
-    plScrollPanel.getVerticalScrollBar().setUnitIncrement(10);
+    plScrollPanel.getVerticalScrollBar().setUnitIncrement(15);
     this.add(plScrollPanel);
   }
 

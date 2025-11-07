@@ -2,16 +2,20 @@ package gui.tools;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -99,7 +103,9 @@ public class Sidebar extends JPanel {
                     mainFrame.showScreen(id);
                 }
             });
-
+            
+            createMouseListener(newButton);
+            
             menuButtons.add(newButton);
             gbc.gridy = row++;
             listPanel.add(newButton, gbc);
@@ -140,7 +146,8 @@ public class Sidebar extends JPanel {
                 toggleSidebar();
             }
         });
-
+        
+        createMouseListener(expandBut);
         northPanel.add(expandBut, BorderLayout.WEST);
     }
 
@@ -159,6 +166,8 @@ public class Sidebar extends JPanel {
                 mainFrame.showScreen(id);
             }
         });
+        
+        createMouseListener(settingsBut);
 
         southPanel.add(settingsBut, BorderLayout.CENTER);
 
@@ -209,4 +218,22 @@ public class Sidebar extends JPanel {
         progText.setFont(new Font("Monospaced", Font.ITALIC, 15));
         northPanel.add(progText, BorderLayout.EAST);
     }
+    
+    private void createMouseListener(JButton but) {
+    	Color originalBg = but.getBackground();
+        
+        but.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                but.setBackground(new Color(200, 200, 200));
+                but.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                but.setBackground(originalBg);
+                but.setCursor(Cursor.getDefaultCursor());
+            }
+        });
+    }
+    
 }

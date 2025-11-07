@@ -50,7 +50,7 @@ public class MainFrame extends JFrame {
         add(contentPanel, BorderLayout.CENTER);
 
         views.put(VIEW_SEARCH, new SearchView());
-        views.put(VIEW_DOWNLOADS, new DownloadsView());
+        // views.put(VIEW_DOWNLOADS, new DownloadsView()); DON'T DISCOMMENT THIS UNLESS YOU KNOW WHAT YOU ARE DOING 
         views.put(VIEW_VIDEO, new JVideoView());
         views.put(VIEW_PLAYLISTS, new PlaylistMenuView());
         views.put(VIEW_SETTINGS, new SettingsView());
@@ -58,7 +58,7 @@ public class MainFrame extends JFrame {
 
 
         contentPanel.add(views.get(VIEW_SEARCH), VIEW_SEARCH);
-        contentPanel.add(views.get(VIEW_DOWNLOADS), VIEW_DOWNLOADS);
+        // contentPanel.add(views.get(VIEW_DOWNLOADS), VIEW_DOWNLOADS); DON'T DISCOMMENT THIS UNLESS YOU KNOW WHAT YOU ARE DOING 
         contentPanel.add(views.get(VIEW_VIDEO), VIEW_VIDEO);
         contentPanel.add(views.get(VIEW_PLAYLISTS), VIEW_PLAYLISTS);
         contentPanel.add(views.get(VIEW_SETTINGS), VIEW_SETTINGS);
@@ -68,6 +68,13 @@ public class MainFrame extends JFrame {
     }
 
     public void showScreen(String id) {
+    	if (!views.containsKey(id)) {
+            if (VIEW_DOWNLOADS.equals(id)) {
+                View v = new DownloadsView();
+                views.put(id, v);
+                contentPanel.add(v, id);
+            }
+        }
         cardLayout.show(contentPanel, id);
     }
     

@@ -16,6 +16,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import utils.ImageUtils;
+
 public class View extends JPanel {
 	private ViewType type;
 	private String title;
@@ -96,8 +98,11 @@ public class View extends JPanel {
 	
 	private void setBackButton(GridBagConstraints gbc) {
 		this.backButton = new JButton();
-		// Change Icon for an Arrow Icon
-		this.backButton.setIcon(new ImageIcon("resources/images/searchIcon.png"));
+		backButton.setBorder(null);
+		backButton.setBackground(new Color(238, 238, 238));
+		
+		ImageIcon backIcon = new ImageIcon("resources/images/backIcon.png");
+		this.backButton.setIcon(ImageUtils.resizeImageIcon(backIcon, 40, 40));
 		
 		this.headerPanel.add(this.backButton, gbc);
 	}
