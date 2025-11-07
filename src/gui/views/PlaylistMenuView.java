@@ -52,7 +52,7 @@ public class PlaylistMenuView extends View {
 
   private void generatePlaylists() {
      for (int i = 0; i < 20; i++) {
-      this.playlists.add(new Playlist("Playlist " + i, "Autor " + i, new ImageIcon("resources/images/logo.png"))); // Pongo autor pa probar a ver si funciona el constructor
+      this.playlists.add(new Playlist("Playlist " + i, "Author " + i, new ImageIcon("resources/images/logo.png")));
     }
   }
   

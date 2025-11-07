@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 public class Playlist {
   private String title = "New Playlist";
   private String author = "Local";
-  private ArrayList<Video> videos;
+  private ArrayList<Video> videos = new ArrayList<>();
   private ImageIcon thumbnail;
 
   public Playlist() {}
