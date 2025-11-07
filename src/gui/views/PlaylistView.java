@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.SwingConstants;
 
 import domain.Playlist;
 import domain.Video;
@@ -74,6 +75,11 @@ public class PlaylistView extends View {
       playlistTable.getTableHeader().setFont(DefaultButton.DEFAULT_FONT.deriveFont(Font.BOLD));
       playlistTable.setRowHeight(80);
       playlistTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+      DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+	centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
+	for (int i = 0; i < playlistTable.getColumnCount(); i++) {
+		playlistTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+	}
 
       playlistTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
         
