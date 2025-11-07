@@ -101,7 +101,7 @@ public class View extends JPanel {
 		backButton.setBorder(null);
 		backButton.setBackground(new Color(238, 238, 238));
 		
-		ImageIcon backIcon = new ImageIcon("resources/images/backIcon.png");
+		ImageIcon backIcon = new ImageIcon("resources/images/back-arrow.png");
 		this.backButton.setIcon(ImageUtils.resizeImageIcon(backIcon, 40, 40));
 		
 		this.headerPanel.add(this.backButton, gbc);

@@ -56,7 +56,7 @@ public class VideoDetailsPanel extends JPanel {
     }
 
     try {
-        ImageIcon resized = ImageUtils.resizeImageIcon(video.getThumbnail(), 200, 120);
+        ImageIcon resized = ImageUtils.resizeImageIcon(video.getThumbnail(), 200, 200);
         thumbnailContainer.setIcon(resized);
         thumbnailContainer.setText(null);
     } catch (Exception e) {

@@ -52,16 +52,24 @@ public class PlaylistView extends View {
 	      }
 	    });
 	    
-      DefaultTableModel playlistDataModel = new DefaultTableModel(new Vector<>(), new Vector<String>(Arrays.asList("#", "Thumbnail", "Title", "Author")));
+      DefaultTableModel playlistDataModel = new DefaultTableModel(new Vector<>(), new Vector<String>(Arrays.asList("#", "Thumbnail", "Title", "Author"))) 
+      {
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       return false;
+		    }
+		};
 
    
       generateVideos();    
 
-	    for (Video v : playlist.getVideos()) {
+	  for (Video v : playlist.getVideos()) {
         playlistDataModel.addRow(new Object[]{playlist.getVideos().indexOf(v) + 1, v.getThumbnail(), v.getTitle(), v.getAuthor()}); 
       }
-
-	    JTable playlistTable = new JTable(playlistDataModel);
+	  
+	  JTable playlistTable = new JTable(playlistDataModel);
+	  
       playlistTable.setFont(DefaultButton.DEFAULT_FONT);
       playlistTable.getTableHeader().setFont(DefaultButton.DEFAULT_FONT.deriveFont(Font.BOLD));
       playlistTable.setRowHeight(80);
@@ -118,7 +126,7 @@ public class PlaylistView extends View {
 
   private void generateVideos() {
     for (int i = 0; i < 20; i++) {
-      playlist.getVideos().add(new Video("Title" + i, "Author" + i, new ImageIcon("resources/images/logo.png")));
+      playlist.getVideos().add(new Video("Title: " + i, "Author: " + i, new ImageIcon("resources/images/logo.png")));
     }
   }
 }
