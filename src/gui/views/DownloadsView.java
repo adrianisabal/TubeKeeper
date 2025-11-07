@@ -116,35 +116,37 @@ public class DownloadsView extends View {
 	// CHAT-GPT
 	private void addExampleDownloads() {
 	    try {
-	        Youtube v1 = new Youtube("https://www.youtube.com/watch?v=5qap5aO4i9A"); // lo-fi hip hop radio
-	        addDownload(v1, "Chill Vibes", "01:12:33", "120 MB");
+	    	Youtube ep1 = new Youtube("https://www.youtube.com/watch?v=icK5DN0MLPc");  
+	    	addDownload(ep1, "Vídeo 1: Planeta Vegetta #1", "20:07", "80 MB");  // vídeo de Vegetta777 
 
-	        Youtube v2 = new Youtube("https://www.youtube.com/watch?v=2OEL4P1Rz04"); // NCS - Alan Walker - Fade
-	        addDownload(v2, "Code Academy", "15:45", "45 MB");
+	    	Youtube ep2 = new Youtube("https://www.youtube.com/watch?v=OuIixcOsl9M");  
+	    	addDownload(ep2, "Vídeo 2: Finalmente os respondo", "22:03", "90 MB");  // vídeo de Willyrex 
 
-	        Youtube v3 = new Youtube("https://www.youtube.com/watch?v=1vPPR9tPqA0"); // Chillhop Essentials
-	        addDownload(v3, "RetroSound", "59:21", "98 MB");
+	    	Youtube ep3 = new Youtube("https://www.youtube.com/watch?v=u9-n0HtolxM");  
+	    	addDownload(ep3, "Vídeo 3: 100 días en Apocalipsis Minecraft", "21:32", "85 MB");  // vídeo de Vegetta777 
 
-	        Youtube v4 = new Youtube("https://www.youtube.com/watch?v=2HiKc0xNY1I"); // Relaxing piano music
-	        addDownload(v4, "Peaceful Tunes", "03:05:20", "210 MB");
+	    	Youtube ep4 = new Youtube("https://www.youtube.com/watch?v=i9eI9Hcwc4s");  
+	    	addDownload(ep4, "Vídeo 4: Mi Primera Vez en Rubius SAW Game", "43:24", "110 MB");  // vídeo de El Rubius 
 
-	        Youtube v5 = new Youtube("https://www.youtube.com/watch?v=4q6UGCyHZCI"); // Cooking background music
-	        addDownload(v5, "Chef Master", "07:32", "36 MB");
+	    	Youtube ep5 = new Youtube("https://www.youtube.com/watch?v=zpUnj3lnG2g");  
+	    	addDownload(ep5, "Vídeo 5: Willy vs Lucky Blocks de Sonic", "11:02", "40 MB");  // vídeo de Willyrex 
 
-	        Youtube v6 = new Youtube("https://www.youtube.com/watch?v=J2X5mJ3HDYE"); // NCS - Electro-Light
-	        addDownload(v6, "Top Tracks", "01:45:10", "180 MB");
+	    	Youtube ep6 = new Youtube("https://www.youtube.com/watch?v=ii-gbjflK-8");	// Marin C
+	    	addDownload(ep6, "Vídeo 6:  Sketch Debate Microsoft VS Linux Semana ESIDE ", "2:34", "28 MB");
 
-	        Youtube v7 = new Youtube("https://www.youtube.com/watch?v=VtF2AgFSLAw"); // Guitar cover
-	        addDownload(v7, "Acoustic Vibes", "06:12", "25 MB");
+	    	Youtube ep7 = new Youtube("https://www.youtube.com/watch?v=vgu9I30du_A");  // ElRichMC
+	    	addDownload(ep7, "Vídeo 7: ElRichMC – SHOCK ABSOLUTO", "19:53", "45 MB");
 
-	        Youtube v8 = new Youtube("https://www.youtube.com/watch?v=DWcJFNfaw9c"); // Study/Focus music
-	        addDownload(v8, "StudyZone", "02:30:40", "155 MB");
+	    	Youtube ep8 = new Youtube("https://www.youtube.com/watch?v=EOjAPm6yI9Q");  // IlloJuan
+	    	addDownload(ep8, "Vídeo 8: IlloJuan – LA ETAPA INTELIGENTE", "27:55", "56 MB"); 
+	    	
+	    	Youtube ep9 = new Youtube("https://www.youtube.com/watch?v=oXmVFUMbdGo");  // M1xwell
+	    	addDownload(ep9, "Vídeo 9: M1xwell – FRACTURE JETT GAMEPLAY", "12:12", "12 MB");  
 
-	        Youtube v9 = new Youtube("https://www.youtube.com/watch?v=tgbNymZ7vqY"); // Funny cats
-	        addDownload(v9, "Random Clips", "12:04", "50 MB");
+	    	Youtube ep10 = new Youtube("https://www.youtube.com/watch?v=P6vvkcL4bN0");  // M1xwell
+	    	addDownload(ep10, "Vídeo 10: M1xwell – JETT BREEZE GAMEPLAY", "33:12", "28 MB"); 
 
-	        Youtube v10 = new Youtube("https://www.youtube.com/watch?v=V-_O7nl0Ii0"); // News theme (creative commons)
-	        addDownload(v10, "Daily World", "09:23", "60 MB");
+
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
