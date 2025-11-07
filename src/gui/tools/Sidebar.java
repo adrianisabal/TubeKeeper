@@ -72,7 +72,7 @@ public class Sidebar extends JPanel {
         sep.setPreferredSize(new Dimension(1, 8));
         northPanel.add(sep, BorderLayout.SOUTH);
 
-        String[] names = {"Quick Download", "Playlists Menu", "Downloads"};
+        String[] names = {"Quick Download", "Playlist Menu", "Downloads"};
         String[] ids   = {MainFrame.VIEW_SEARCH, MainFrame.VIEW_PLAYLISTS, MainFrame.VIEW_DOWNLOADS};
 
         JPanel listPanel = new JPanel(new GridBagLayout());

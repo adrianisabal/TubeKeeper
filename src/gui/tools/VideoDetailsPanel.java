@@ -1,19 +1,16 @@
 package gui.tools;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.net.URI;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.ImageIcon;
 
-import com.github.felipeucelli.javatube.Youtube;
-
+import domain.Video;
 import utils.ImageUtils;
 
 public class VideoDetailsPanel extends JPanel {
@@ -53,22 +50,24 @@ public class VideoDetailsPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    
-    public void updateVideoDetails(Youtube video) {
-        if (video == null) {
-            return;
-        }
-
-        try {
-        	URI uri = new URI(video.getThumbnailUrl());
-        	URL thumbUrl = uri.toURL();
-        	ImageIcon icon = new ImageIcon(thumbUrl);
-            ImageUtils.resizeImageIcon(icon, 200, 120);
-        	thumbnailContainer.setText(null);
-
-        } catch (Exception e) {
-        	thumbnailContainer.setIcon(null);
-        	thumbnailContainer.setText("No Image");
-        }
+    public void updateVideoDetails(Video video) {
+    if (video == null) {
+        return;
     }
+
+    try {
+        ImageIcon resized = ImageUtils.resizeImageIcon(video.getThumbnail(), 200, 120);
+        thumbnailContainer.setIcon(resized);
+        thumbnailContainer.setText(null);
+    } catch (Exception e) {
+        thumbnailContainer.setIcon(null);
+        thumbnailContainer.setText("No Image");
+    }
+
+    tableModel.setRowCount(0);
+    tableModel.addRow(new Object[]{"Title", video.getTitle()});
+    tableModel.addRow(new Object[]{"Author", video.getAuthor()});
+    tableModel.addRow(new Object[]{"Size", (int) (Math.random() * 512)}); // si existe
+}
+
 }
