@@ -5,9 +5,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Window;
+import java.awt.Font;
 import java.util.Arrays;
 import java.util.Vector;
 
+import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,12 +17,14 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import domain.Playlist;
 import domain.Video;
 import utils.ImageUtils;
 
 import gui.MainFrame;
+import gui.tools.DefaultButton;
 
 public class PlaylistView extends View {
 	
@@ -58,7 +62,42 @@ public class PlaylistView extends View {
       }
 
 	    JTable playlistTable = new JTable(playlistDataModel);
-      
+      playlistTable.setFont(DefaultButton.DEFAULT_FONT);
+      playlistTable.getTableHeader().setFont(DefaultButton.DEFAULT_FONT.deriveFont(Font.BOLD));
+      playlistTable.setRowHeight(80);
+      playlistTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+
+      playlistTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+        
+        @Override  
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+          JLabel label = new JLabel();
+          label.setBackground(table.getSelectionBackground());
+          label.setForeground(table.getSelectionForeground());
+          label.setOpaque(true);
+          label.setHorizontalAlignment(JLabel.CENTER);
+          label.setVerticalAlignment(JLabel.CENTER); 
+
+          if (isSelected) {
+              label.setBackground(table.getSelectionBackground());
+              label.setForeground(table.getSelectionForeground());
+          } else {
+              label.setBackground(table.getBackground());
+              label.setForeground(table.getForeground());
+          }
+          if (value instanceof ImageIcon) {
+              ImageIcon originalIcon = (ImageIcon) value;
+              ImageIcon resizedIcon = ImageUtils.resizeImageIcon(originalIcon, 70, 70);
+              label.setIcon(resizedIcon);
+              label.setText(""); 
+          } else {
+              label.setIcon(null);
+              label.setText(value != null ? value.toString() : "");
+          }
+            
+          return label;
+        }
+      });
 
       JPanel plPanel = new JPanel(new BorderLayout());
     
@@ -71,7 +110,7 @@ public class PlaylistView extends View {
       textPanel.add(new JLabel(playlist.getAuthor(), JLabel.CENTER));
       plPanel.add(textPanel, BorderLayout.SOUTH);
 
-	    JScrollPane tableContainer = new JScrollPane(playlistTable);
+      JScrollPane tableContainer = new JScrollPane(playlistTable);
 
       add(plPanel, BorderLayout.WEST);
 	    add(tableContainer, BorderLayout.CENTER);
