@@ -1,4 +1,4 @@
-# 📥 TubeKeeper
+## TubeKeeper
 
 Your ultimate Java-powered download manager for seamless content acquisition.
 
@@ -7,7 +7,7 @@ Your ultimate Java-powered download manager for seamless content acquisition.
 ![Stars](https://img.shields.io/github/stars/adrianisabal/TubeKeeper?style=social)
 ![Forks](https://img.shields.io/github/forks/adrianisabal/TubeKeeper?style=social)
 
-![example-preview-image](/preview_example.png)
+![logo](/resources/images/logo.png)
 
 ---
 
