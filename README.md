@@ -7,7 +7,7 @@ TubeKeeper is a Java desktop app for managing downloads. It can handle regular f
 ![Stars](https://img.shields.io/github/stars/adrianisabal/TubeKeeper?style=social)
 ![Forks](https://img.shields.io/github/forks/adrianisabal/TubeKeeper?style=social)
 
-![logo](/resources/images/logo.png)
+![logo](/resources/images/logoConFondo.png)
 
 ---
 
