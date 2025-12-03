@@ -1,6 +1,6 @@
 ## TubeKeeper
 
-Your ultimate Java-powered download manager for seamless content acquisition.
+TubeKeeper is a Java desktop app for managing downloads. It can handle regular files, videos and playlists, and lets you keep everything in one place instead of juggling browser tabs and random folders.
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/adrianisabal/TubeKeeper/releases)
 [![License](https://img.shields.io/badge/license-GPLv2-green)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
@@ -11,156 +11,186 @@ Your ultimate Java-powered download manager for seamless content acquisition.
 
 ---
 
-## ✨ Features
+## Overview
 
-TubeKeeper is designed to provide a robust and user-friendly experience for managing your downloads.
+The project is still under active development, but the main pieces are already there:
 
-*   🚀 **Efficient Download Management:** Seamlessly handle multiple downloads, pause, resume, and organize your files with ease.
-*   🔗 **Broad Protocol Support:** Download content from various sources, including HTTP, HTTPS, and potentially more in future updates.
-*   ⚙️ **Configurable Settings:** Customize download directories, connection limits, and other preferences to suit your needs.
-*   💾 **Persistent Downloads:** Automatically save download progress, allowing you to pick up where you left off even after closing the application.
-*   🛡️ **Lightweight & Reliable:** Built with Java, TubeKeeper offers a stable and resource-efficient solution for all your downloading tasks.
+- A **download from internet** view to add new downloads (files, videos, playlists).
+- A **local videos** view where you can browse all videos in a user‑defined directory.
+- A **playlists** view that shows all playlists for a given user and lets you inspect or download them.
 
----
+The goal is to keep the UI simple and focused on real‑world usage, not on exposing every possible knob.
 
-## 🛠️ Installation Guide
+### Current Features
 
-To get TubeKeeper up and running, follow these steps. Ensure you have a Java Development Kit (JDK) installed on your system (version 8 or higher is recommended).
+- 🚀 **Download management**
+  - Add downloads from URLs.
+  - See progress and status of each download.
+  - Pause / resume (where supported) and cancel downloads.
 
-### Prerequisites
+- 🎬 **Local video library**
+  - Point TubeKeeper at a folder.
+  - Browse all videos in that location from within the app.
+  - Use this as a simple “library” view instead of opening the file manager all the time.
 
-*   **Java Development Kit (JDK):** Version 8 or newer.
-    You can download it from [Oracle](https://www.oracle.com/java/technologies/downloads/) or use an open-source distribution like [Adoptium Temurin](https://adoptium.net/).
-*   **Git:** For cloning the repository.
+- 📚 **User playlists**
+  - Look up all playlists associated with a user.
+  - Inspect playlist contents.
+  - Use playlists as a source for batch downloads.
 
-### Manual Installation (Building from Source)
+- ⚙️ **Configurable basics**
+  - Choose your default download directory.
+  - Basic settings for how and where downloads are handled.
 
-1.  **Clone the Repository:**
-    Open your terminal or command prompt and clone the TubeKeeper repository:
-
-    ```bash
-    git clone https://github.com/adrianisabal/TubeKeeper.git
-    cd TubeKeeper
-    ```
-
-2.  **Build the Project with Gradle:**
-    TubeKeeper uses Gradle for dependency management and building. Navigate to the project root and execute the build command:
-
-    ```bash
-    # On Linux/macOS
-    ./gradlew build
-
-    # On Windows
-    .\gradlew.bat build
-    ```
-    This command will compile the source code, run tests, and package the application. The executable JAR file will typically be found in the `build/libs` directory.
-
-3.  **Run the Application:**
-    After a successful build, you can run TubeKeeper using the generated JAR file:
-
-    ```bash
-    java -jar build/libs/TubeKeeper-1.0.0.jar
-    ```
-    (Note: The exact JAR filename might vary based on the version number.)
+- 💾 **Persistent state**
+  - Downloads and configuration are saved, so restarting the app doesn’t lose everything.
 
 ---
 
-## 🚀 Usage Examples
+## Installation & Running
 
-Once installed, TubeKeeper provides a simple interface for managing your downloads.
+### Requirements
 
-### Basic Usage
+- **Java JDK 8+**  
+  Any recent JDK should work (Oracle, Temurin, etc.).
+- **Git** (optional, but convenient).
 
-To launch the application, use the command provided in the installation steps. A graphical user interface (GUI) should appear, allowing you to add new download links.
+### Clone the repository
+
+```bash
+git clone https://github.com/adrianisabal/TubeKeeper.git
+cd TubeKeeper
+```
+
+### Run with Gradle (recommended for development)
+
+You don’t need to build a JAR just to try it out. From the project root:
+
+```bash
+# Linux / macOS
+./gradlew run
+
+# Windows
+.\gradlew.bat run
+```
+
+Gradle will download dependencies (first run might take a bit) and then start the GUI.
+
+### (Optional) Build a JAR
+
+If you prefer a JAR:
+
+```bash
+# Linux / macOS
+./gradlew build
+
+# Windows
+.\gradlew.bat build
+```
+
+You should then get a JAR under `build/libs`, e.g.:
 
 ```bash
 java -jar build/libs/TubeKeeper-1.0.0.jar
 ```
 
-### Adding a New Download
-
-1.  Click the "Add Download" button (or equivalent in the UI).
-2.  Paste the URL of the file you wish to download into the input field.
-3.  Specify the desired save location.
-4.  Click "Start Download."
-
-![TubeKeeper UI Screenshot Placeholder](/preview_example.png)
-_Screenshot: [placeholder] TubeKeeper's main interface showing active downloads._
-
-### Common Use Cases
-
-*   **Downloading a large file:** Paste the direct download link for a large software installer or video. TubeKeeper will manage the download, allowing you to pause and resume as needed.
-*   **Batch Downloads:** While not explicitly a feature yet, future versions may allow adding multiple URLs for sequential or parallel downloading.
-*   **Managing interrupted downloads:** If your internet connection drops, TubeKeeper will attempt to resume the download from where it left off once the connection is restored.
+(The exact filename may differ depending on your build configuration.)
 
 ---
 
-## 🗺️ Project Roadmap
+## How to Use TubeKeeper
 
-TubeKeeper is continuously evolving. Here's a glimpse into our future plans:
+### 1. Download from Internet
 
-### Upcoming Features
+The main view lets you add URLs for content you want to download.
 
-*   **Multi-part Downloads:** Implement parallel downloading for faster acquisition of large files.
-*   **Browser Integration:** Develop browser extensions for easier link capture and direct download initiation.
-*   **Scheduler:** Add a feature to schedule downloads for specific times.
-*   **Theming Options:** Allow users to customize the application's appearance.
+Typical flow:
 
-### Planned Improvements
+1. Open TubeKeeper (`./gradlew run` or via JAR).
+2. Go to the **Download from Internet** section.
+3. Paste the URL (file, video, or playlist).
+4. Select or confirm the download directory.
+5. Start the download and watch progress in the list.
 
-*   **Enhanced Error Handling:** Improve robustness and provide clearer feedback on download failures.
-*   **Performance Optimization:** Further optimize resource usage and download speeds.
-*   **User Experience Refinements:** Streamline the UI/UX based on community feedback.
+### 2. Browse Local Videos
 
-### Version Milestones
+TubeKeeper can act as a simple viewer for a folder full of videos:
 
-*   **v1.1.0:** Focus on multi-part download capabilities and initial browser integration.
-*   **v1.2.0:** Introduce download scheduling and advanced configuration options.
-*   **v2.0.0:** Major refactor for modularity and extensibility, including a plugin architecture.
+1. Open the **Local Videos** view.
+2. Set the folder you want to use as your video library.
+3. TubeKeeper will list the videos it finds there.
+4. Use this view to quickly browse what you already have downloaded.
 
----
+This is handy if you use TubeKeeper both to download and to keep track of where everything ended up.
 
-## 🤝 Contribution Guidelines
+### 3. View User Playlists
 
-We welcome contributions to TubeKeeper! Please follow these guidelines to ensure a smooth collaboration.
+If you work a lot with playlists:
 
-### Code Style
-
-*   Adhere to standard Java coding conventions (e.g., Google Java Style Guide or Oracle Code Conventions).
-*   Use clear and descriptive variable/method names.
-*   Format your code using a consistent style (e.g., via an IDE formatter).
-
-### Branch Naming Conventions
-
-*   **`main`**: The stable production branch. All pull requests should target this branch.
-*   **`feature/<feature-name>`**: For new features.
-*   **`bugfix/<issue-description>`**: For bug fixes.
-*   **`docs/<description>`**: For documentation updates.
-*   **`refactor/<description>`**: For code refactoring that doesn't change external behavior.
-
-### Pull Request (PR) Process
-
-1.  **Fork** the repository.
-2.  **Create a new branch** from `main` (e.g., `git checkout -b feature/my-awesome-feature`).
-3.  **Make your changes** and commit them with clear, concise messages.
-4.  **Push** your branch to your forked repository.
-5.  **Open a Pull Request** to the `main` branch of the original TubeKeeper repository.
-6.  Provide a clear description of your changes and reference any related issues.
-
-### Testing Requirements
-
-*   All new features should be accompanied by relevant **unit tests**.
-*   Bug fixes should include a test that reproduces the bug and verifies the fix.
-*   Ensure all existing tests pass before submitting a pull request.
+1. Go to the **Playlists** view.
+2. Enter the user whose playlists you want to see.
+3. The app lists all playlists for that user.
+4. From there you can inspect contents and (where supported) download items from those playlists.
 
 ---
 
-## 📜 License Information
+## Roadmap
 
-TubeKeeper is distributed under the **GNU General Public License v2.0**.
+The project is not finished yet. Some things we’d like to add or improve:
 
-You are free to use, modify, and distribute this software under the terms of the GPLv2.0. For the full text of the license, please refer to the [LICENSE](LICENSE) file in this repository or visit [GNU General Public License v2.0](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html).
+- **Multi‑part downloads** to speed up large files.
+- **Better integration with browsers** (easier URL capture, maybe an extension).
+- **Scheduling**: start downloads at a given time.
+- **Theming**: light/dark theme and some basic customization.
+- More robust error handling and clearer messages when something fails.
+- Performance and UX polish as we get more feedback.
+
+If you’re interested in any of these areas, contributions and ideas are welcome.
+
+---
+
+## Contributing
+
+Contributions of all kinds are appreciated: code, testing, docs, feature ideas, UX feedback…
+
+### Coding style
+
+- Standard Java conventions.
+- Clear names over clever names.
+- Keep formatting consistent (use your IDE’s formatter).
+
+### Branches
+
+- `main` – stable branch.
+- `feature/<name>` – new features.
+- `bugfix/<description>` – bug fixes.
+- `docs/<description>` – documentation changes.
+- `refactor/<description>` – internal refactors.
+
+### Pull Request flow
+
+1. Fork the repo.
+2. Create a branch from `main`, e.g.:
+
+   ```bash
+   git checkout -b feature/my-new-feature
+   ```
+
+3. Make your changes and commit with clear messages.
+4. Push your branch to your fork.
+5. Open a PR against `main` in this repository, explaining what you changed and why.
+
+If your PR changes behavior in a user‑visible way, a short note or screenshot is very useful.
+
+---
+
+## License
+
+TubeKeeper is released under the **GNU General Public License v2.0 (GPLv2)**.
+
+You are free to use, modify and redistribute this software under the terms of the GPLv2.  
+See the [LICENSE](LICENSE) file or the [official GPLv2 text](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) for details.
 
 **Copyright (c) 2023 fragi0, adrianisabal, bombitron**
 
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, version 2 of the License.
