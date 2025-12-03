@@ -15,9 +15,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import gui.tools.DefaultButton;
-import gui.views.View.ViewType;
-
 public class SettingsView extends View{
 
 	public SettingsView() {
@@ -77,8 +74,8 @@ public class SettingsView extends View{
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		
-		JCheckBox dataSteal = new JCheckBox("Let us share your data", true);
-		centerPanel.add(dataSteal, gbc);
+		JCheckBox uselessButton = new JCheckBox("Do you like this app?", true);
+		centerPanel.add(uselessButton, gbc);
 		
 		gbc.gridx = 0;
 		gbc.gridy = 3;

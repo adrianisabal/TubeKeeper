@@ -62,9 +62,6 @@ public class PlaylistView extends View {
 		    }
 		};
 
-   
-      generateVideos();    
-
 	  for (Video v : playlist.getVideos()) {
         playlistDataModel.addRow(new Object[]{playlist.getVideos().indexOf(v) + 1, v.getThumbnail(), v.getTitle(), v.getAuthor()}); 
       }
@@ -129,10 +126,4 @@ public class PlaylistView extends View {
       add(plPanel, BorderLayout.WEST);
 	    add(tableContainer, BorderLayout.CENTER);
 	}
-
-  private void generateVideos() {
-    for (int i = 0; i < 20; i++) {
-      playlist.getVideos().add(new Video("Title: " + i, "Author: " + i, new ImageIcon("resources/images/logo.png")));
-    }
-  }
 }

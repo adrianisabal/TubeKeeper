@@ -20,6 +20,7 @@ import java.awt.Cursor;
 import domain.Playlist;
 import gui.MainFrame;
 import utils.ImageUtils;
+import main.Main;
 
 public class PlaylistMenuView extends View {
   
@@ -27,7 +28,8 @@ public class PlaylistMenuView extends View {
 
   public PlaylistMenuView() {
     super(ViewType.MAIN_VIEW, "Playlists");
-    generatePlaylists();
+    this.playlists.addAll(Main.SAMPLE_PLAYLISTS);
+
     JPanel mainPanel = new JPanel(new GridLayout((int) (Math.ceil(playlists.size()/3.0)), 3, 20, 20));
     for (Playlist p : playlists) {
       JPanel plPanel = new JPanel(new BorderLayout());
@@ -52,12 +54,6 @@ public class PlaylistMenuView extends View {
 
   }
 
-  private void generatePlaylists() {
-     for (int i = 0; i < 20; i++) {
-      this.playlists.add(new Playlist("Playlist " + i, "Author " + i, new ImageIcon("resources/images/logo.png")));
-    }
-  }
-  
   private void addMouseAdapter(JPanel plPanel, JPanel textPanel, Playlist playlist) {
     Color originalBg = plPanel.getBackground();
     Color originalTextBg = textPanel.getBackground();
