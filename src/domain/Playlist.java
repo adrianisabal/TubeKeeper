@@ -2,7 +2,6 @@ package domain;
 
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Playlist {
 
@@ -12,14 +11,13 @@ public class Playlist {
   private String description;
   private String views;
   private String lastUpdated;
-  private String owner = "Local";
+  private String author = "Local";
   private String ownerId;
   private String ownerUrl;
   private String url;
 
-  private ArrayList<String> videoIds = new ArrayList<>();
-
-  private List<Video> videos = new ArrayList<>();
+  private ArrayList<Video> videos = new ArrayList<>();
+  private ArrayList<String> videoUrls = new ArrayList<>();
 
   private ImageIcon thumbnail;
 
@@ -27,9 +25,9 @@ public class Playlist {
     this(title, "Local", null);
   }
 
-  public Playlist(String title, String owner, ImageIcon thumbnail) {
+  public Playlist(String title, String author, ImageIcon thumbnail) {
     this.title = title;
-    this.owner = owner;
+    this.author = author;
     this.thumbnail = thumbnail;
   }
 
@@ -44,16 +42,15 @@ public class Playlist {
     this.description = apiPlaylist.getDescription();
     this.views = apiPlaylist.getViews();
     this.lastUpdated = apiPlaylist.getLastUpdated();
-    this.owner = apiPlaylist.getOwner();
+    this.author = apiPlaylist.getOwner();
     this.ownerId = apiPlaylist.getOwnerId();
     this.ownerUrl = apiPlaylist.getOwnerUrl();
     this.url = apiPlaylist.getUrl();
-    this.videoIds = apiPlaylist.getVideos();  
+    this.videoUrls = apiPlaylist.getVideos();
 
     this.videos = new ArrayList<>();
-    this.thumbnail = null; 
+    this.thumbnail = null;
   }
-
 
   public String getId() {
     return id;
@@ -75,8 +72,8 @@ public class Playlist {
     return lastUpdated;
   }
 
-  public String getOwner() {
-    return owner;
+  public String getAuthor() {
+    return author;
   }
 
   public String getOwnerId() {
@@ -86,20 +83,21 @@ public class Playlist {
   public String getOwnerUrl() {
     return ownerUrl;
   }
+
   public String length() {
-    return String.valueOf(videoIds.size());
+    return String.valueOf(videos.size());
   }
 
   public String getUrl() {
     return url;
   }
 
-  public ArrayList<String> getVideos() {
-    return videoIds;
+  public ArrayList<Video> getVideos() {
+    return videos;
   }
 
-  public List<Video> getVideoObjects() {
-    return videos;
+  public ArrayList<String> getVideoUrls() {
+    return videoUrls;
   }
 
   public ImageIcon getThumbnail() {

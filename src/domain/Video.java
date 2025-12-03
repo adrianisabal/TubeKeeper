@@ -12,17 +12,15 @@ import org.json.JSONArray;
 
 public class Video {
 
-
-  private String id;               
+  private String id;
   private String title;
   private String description;
   private String author;
-  private String publishDate;         
-  private Integer length;         
+  private String publishDate;
+  private Integer length;
   private String thumbnailUrl;
   private Long views;
   private final List<String> keywords = new ArrayList<>();
-
 
   private String url;
   private Integer bitrate;
@@ -35,7 +33,6 @@ public class Video {
   private boolean defaultAudioTrack;
   private String audioTrackName;
   private String audioTrackId;
-
 
   private ImageIcon thumbnail = new ImageIcon("resources/images/logo.png");
 
@@ -57,7 +54,6 @@ public class Video {
     fillMetadata(youtube, null);
   }
 
-
   private void fillMetadata(Youtube youtube, Stream stream) throws Exception {
     String watchUrl = youtube.getUrl();
     this.id = extractVideoId(watchUrl);
@@ -71,7 +67,7 @@ public class Video {
     this.author = youtube.getAuthor();
 
     this.keywords.clear();
-    JSONArray apiKeywords = youtube.getKeywords(); 
+    JSONArray apiKeywords = youtube.getKeywords();
     if (apiKeywords != null) {
       for (int i = 0; i < apiKeywords.length(); i++) {
         this.keywords.add(apiKeywords.getString(i));
@@ -105,7 +101,6 @@ public class Video {
     }
     return null;
   }
-
 
   public String getId() {
     return id;
