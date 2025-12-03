@@ -30,6 +30,7 @@ import gui.tools.VideoDetailsPanel;
 import domain.Video;
 import gui.tools.DefaultButton;
 import utils.ImageUtils;
+import main.Main;
 
 public class DownloadsView extends View {
 	
@@ -44,7 +45,7 @@ public class DownloadsView extends View {
 		setHeader();
 		
 		initTable();
-		addExampleDownloads();
+		loadVideosFromMain();
 
     for (Video v : videos) {
         tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), (int) (Math.random()*512) + "MB"}); 
@@ -156,10 +157,9 @@ public class DownloadsView extends View {
 	  }
 	  });
 	}
-	  private void addExampleDownloads() {
-	    for (int i = 0; i < 20; i++) {
-	      videos.add(new Video("Title" + i, "Author" + i, new ImageIcon("resources/images/logo.png")));
-	       
-	    }
-	  }
-	}
+
+  private void loadVideosFromMain() {
+    videos.clear();
+    videos.addAll(Main.SAMPLE_VIDEOS);
+  }
+}

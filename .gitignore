@@ -44,3 +44,19 @@ replay_pid*
 # Gradle
 .gradle/
 !gradle/wrapper/gradle-wrapper.jar
+
+# SQLite database files
+resources/db/*.db
+resources/db/*.sqlite
+resources/db/*.sqlite3
+
+# Configuración de usuario (config.properties)
+conf/*.properties
+
+# Datos de usuario adicionales
+resources/data/*
+!resources/data/.gitkeep
+
+# Logs
+log/*
+!log/.gitkeep
