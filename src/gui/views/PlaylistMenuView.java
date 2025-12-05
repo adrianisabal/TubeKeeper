@@ -19,7 +19,7 @@ import java.awt.Cursor;
 import domain.Playlist;
 import gui.MainFrame;
 import utils.ImageUtils;
-import main.Main;
+import db.PlaylistDAO;
 
 public class PlaylistMenuView extends View {
   
@@ -27,7 +27,7 @@ public class PlaylistMenuView extends View {
 
   public PlaylistMenuView() {
     super(ViewType.MAIN_VIEW, "Playlists");
-    this.playlists.addAll(Main.SAMPLE_PLAYLISTS);
+    loadPlaylistsFromDatabase();
 
     JPanel mainPanel = new JPanel(new GridLayout((int) (Math.ceil(playlists.size()/3.0)), 3, 20, 20));
     for (Playlist p : playlists) {
@@ -51,6 +51,16 @@ public class PlaylistMenuView extends View {
     plScrollPanel.setBorder(null);
     this.add(plScrollPanel);
 
+  }
+
+  private void loadPlaylistsFromDatabase() {
+    playlists.clear();
+    try {
+      PlaylistDAO dao = new PlaylistDAO();
+      playlists.addAll(dao.findAll());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private void addMouseAdapter(JPanel plPanel, JPanel textPanel, Playlist playlist) {

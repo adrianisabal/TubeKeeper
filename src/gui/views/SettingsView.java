@@ -79,7 +79,7 @@ public class SettingsView extends View{
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.EAST;
 		
-		shareDataCheck = new JCheckBox("Let us share your data", true);
+		shareDataCheck = new JCheckBox("Do you like this app?", false);
 		centerPanel.add(shareDataCheck, gbc);
 		
 		gbc.gridx = 0;

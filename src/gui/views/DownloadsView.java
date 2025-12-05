@@ -30,7 +30,7 @@ import gui.tools.VideoDetailsPanel;
 import domain.Video;
 import gui.tools.DefaultButton;
 import utils.ImageUtils;
-import main.Main;
+import db.VideoDAO;
 
 public class DownloadsView extends View {
 	
@@ -45,7 +45,7 @@ public class DownloadsView extends View {
 		setHeader();
 		
 		initTable();
-		loadVideosFromMain();
+		loadVideosFromDatabase();
 
     for (Video v : videos) {
         tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), (int) (Math.random()*512) + "MB"}); 
@@ -158,8 +158,13 @@ public class DownloadsView extends View {
 	  });
 	}
 
-  private void loadVideosFromMain() {
+  private void loadVideosFromDatabase() {
     videos.clear();
-    videos.addAll(Main.SAMPLE_VIDEOS);
+    try {
+      VideoDAO dao = new VideoDAO();
+      videos.addAll(dao.findAll());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

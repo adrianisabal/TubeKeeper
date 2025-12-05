@@ -43,6 +43,7 @@ dependencies {
     implementation 'com.github.felipeucelli:javatube:06b8313744'
     implementation 'org.json:json:20231013'
     implementation 'com.github.felipeucelli:nodejs_wrapper:c604a04b2d'
+    implementation 'org.xerial:sqlite-jdbc:3.45.2.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 }

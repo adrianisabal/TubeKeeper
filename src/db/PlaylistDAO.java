@@ -8,13 +8,13 @@ import java.util.List;
 
 public class PlaylistDAO {
 
-  public void insert(Playlist p) throws SQLException {
+  public int insert(Playlist p) throws SQLException {
     String sql = "INSERT INTO playlist " +
             "(title, author, description, views, last_updated, owner_id, owner_url, url, thumbnail_path) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     try (Connection con = DatabaseManager.getConnection();
-         PreparedStatement pstmt = con.prepareStatement(sql)) {
+         PreparedStatement pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
       pstmt.setString(1, p.getTitle());
       pstmt.setString(2, p.getAuthor());
@@ -27,7 +27,14 @@ public class PlaylistDAO {
       pstmt.setString(9, null);
 
       pstmt.executeUpdate();
+
+      try (ResultSet rs = pstmt.getGeneratedKeys()) {
+        if (rs.next()) {
+          return rs.getInt(1);
+        }
+      }
     }
+    return -1;
   }
 
   public List<Playlist> findAll() throws SQLException {
@@ -40,9 +47,10 @@ public class PlaylistDAO {
          ResultSet rs = stmt.executeQuery(sql)) {
 
       while (rs.next()) {
+        int id = rs.getInt("id");
         String title = rs.getString("title");
         String author = rs.getString("author");
-        Playlist p = new Playlist(title, author, null);
+        Playlist p = new Playlist(id, title, author);
         result.add(p);
       }
     }
@@ -71,5 +79,17 @@ public class PlaylistDAO {
       pstmt.setInt(1, id);
       pstmt.executeUpdate();
     }
+  }
+
+  public int countAll() throws SQLException {
+    String sql = "SELECT COUNT(*) FROM playlist";
+    try (Connection con = DatabaseManager.getConnection();
+         Statement stmt = con.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+      if (rs.next()) {
+        return rs.getInt(1);
+      }
+    }
+    return 0;
   }
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class Playlist {
 
+  private int dbId;
+
   private String id;
 
   private String title = "New Playlist";
@@ -31,6 +33,13 @@ public class Playlist {
     this.thumbnail = thumbnail;
   }
 
+  public Playlist(int dbId, String title, String author) {
+    this.dbId = dbId;
+    this.title = title;
+    this.author = author;
+    this.thumbnail = new ImageIcon("resources/images/logo.png");
+  }
+
   public Playlist(com.github.felipeucelli.javatube.Playlist apiPlaylist) throws Exception {
     fillMetadata(apiPlaylist);
   }
@@ -50,6 +59,14 @@ public class Playlist {
 
     this.videos = new ArrayList<>();
     this.thumbnail = null;
+  }
+
+  public int getDbId() {
+    return dbId;
+  }
+
+  public void setDbId(int dbId) {
+    this.dbId = dbId;
   }
 
   public String getId() {

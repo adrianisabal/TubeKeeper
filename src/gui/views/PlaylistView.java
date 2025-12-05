@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.Font;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import java.awt.Component;
@@ -26,6 +27,7 @@ import utils.ImageUtils;
 
 import gui.MainFrame;
 import gui.tools.DefaultButton;
+import db.VideoDAO;
 
 public class PlaylistView extends View {
 	
@@ -62,8 +64,9 @@ public class PlaylistView extends View {
 		    }
 		};
 
-	  for (Video v : playlist.getVideos()) {
-        playlistDataModel.addRow(new Object[]{playlist.getVideos().indexOf(v) + 1, v.getThumbnail(), v.getTitle(), v.getAuthor()}); 
+      List<Video> videos = loadVideosFromDatabase(playlist.getDbId());
+	  for (Video v : videos) {
+        playlistDataModel.addRow(new Object[]{videos.indexOf(v) + 1, v.getThumbnail(), v.getTitle(), v.getAuthor()}); 
       }
 	  
 	  JTable playlistTable = new JTable(playlistDataModel);
@@ -126,4 +129,14 @@ public class PlaylistView extends View {
       add(plPanel, BorderLayout.WEST);
 	    add(tableContainer, BorderLayout.CENTER);
 	}
+
+  private List<Video> loadVideosFromDatabase(int playlistId) {
+    try {
+      VideoDAO dao = new VideoDAO();
+      return dao.findByPlaylistId(playlistId);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return java.util.Collections.emptyList();
+    }
+  }
 }

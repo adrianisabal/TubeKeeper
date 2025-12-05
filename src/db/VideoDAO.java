@@ -68,6 +68,26 @@ public class VideoDAO {
     return result;
   }
 
+  public List<Video> findAll() throws SQLException {
+    List<Video> result = new ArrayList<>();
+
+    String sql = "SELECT title, author FROM video";
+
+    try (Connection con = DatabaseManager.getConnection();
+         Statement stmt = con.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+
+      while (rs.next()) {
+        String title = rs.getString("title");
+        String author = rs.getString("author");
+        Video v = new Video(title, author);
+        result.add(v);
+      }
+    }
+
+    return result;
+  }
+
   public void updateTitle(int id, String newTitle) throws SQLException {
     String sql = "UPDATE video SET title = ? WHERE id = ?";
 

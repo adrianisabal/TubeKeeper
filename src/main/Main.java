@@ -6,7 +6,11 @@ import javax.swing.ImageIcon;
 import gui.MainFrame;
 import domain.Video;
 import domain.Playlist;
+import db.DatabaseManager;
+import db.PlaylistDAO;
+import db.VideoDAO;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main {
@@ -15,12 +19,35 @@ public class Main {
     public static ArrayList<Playlist> SAMPLE_PLAYLISTS = new ArrayList<>();
 
     public static void main(String[] args) {
-        generateSampleVideos();
-        generateSamplePlaylists();
+        DatabaseManager.initializeDatabase();
+        try {
+            initializeSampleDataIfEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         SwingUtilities.invokeLater(() -> new MainFrame());
     }
-    // AI GENERATED SAMPLE DATA
+
+    private static void initializeSampleDataIfEmpty() throws SQLException {
+        PlaylistDAO playlistDAO = new PlaylistDAO();
+        VideoDAO videoDAO = new VideoDAO();
+
+        if (playlistDAO.countAll() > 0) {
+            return;
+        }
+
+        generateSampleVideos();
+        generateSamplePlaylists();
+
+        for (Playlist p : SAMPLE_PLAYLISTS) {
+            int playlistId = playlistDAO.insert(p);
+            for (Video v : p.getVideos()) {
+                videoDAO.insert(v, playlistId);
+            }
+        }
+    }
+
     private static void generateSampleVideos() {
         String[] authors = {
                 "Fireship",
