@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 public enum LinkType {
     VIDEO, PLAYLIST, UNKNOWN;
 
-	public LinkType getLinkType(String url) {
+	public static LinkType getLinkType(String url) {
 	    try {
 	        URI uri = new URI(url);
 	        String query = uri.getQuery();

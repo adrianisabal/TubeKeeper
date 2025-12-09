@@ -1,7 +1,11 @@
 package domain;
 
 import javax.swing.ImageIcon;
+
+import com.github.felipeucelli.javatube.Youtube;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Playlist {
 
@@ -57,8 +61,24 @@ public class Playlist {
     this.url = apiPlaylist.getUrl();
     this.videoUrls = apiPlaylist.getVideos();
 
-    this.videos = new ArrayList<>();
+    this.videos = convertVideos(apiPlaylist);
     this.thumbnail = null;
+  }
+  
+  private ArrayList<Video> convertVideos(com.github.felipeucelli.javatube.Playlist apiPlaylist) {
+	  ArrayList<Video> result = new ArrayList<>();
+	  
+      for (String url : videoUrls) {
+          Video v;
+		  try {
+			v = new Video(new Youtube(url));
+			result.add(v);
+		  } catch (Exception e) {
+			e.printStackTrace();
+		  }
+      }
+
+      return result;
   }
 
   public int getDbId() {

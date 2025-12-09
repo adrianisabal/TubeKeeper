@@ -11,6 +11,7 @@ import javax.swing.SwingUtilities;
 import com.github.felipeucelli.javatube.Youtube;
 
 import db.VideoDAO;
+import domain.DownloadManager;
 import domain.Video;
 
 import javax.swing.JLabel;
@@ -18,12 +19,17 @@ import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 
 import utils.ImageUtils;
+import gui.tools.DownloadsPanel;
 import gui.tools.SearchBar;
 
 public class SearchView extends View {
 
+	private DownloadManager downloadsManger;
+	
 	public SearchView() {
 		super(ViewType.MAIN_VIEW, "Quick Download");
+		
+		defineDownloadsPanel();
 		
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new GridBagLayout());
@@ -36,6 +42,14 @@ public class SearchView extends View {
 		add(centerPanel, BorderLayout.CENTER);
 	}
 	
+	private void defineDownloadsPanel() {
+		DownloadsPanel downloadsPanel = new DownloadsPanel();
+		
+		add(downloadsPanel, BorderLayout.EAST);
+		downloadsPanel.setVisible(false);
+		
+		downloadsManger = new DownloadManager(downloadsPanel);
+	}
 	
 	private GridBagConstraints defineConstraints() {
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -70,30 +84,7 @@ public class SearchView extends View {
 		
 		addEmptySeparator(containerPanel, gbc);
 		
-		searcher.setOnEnterAction(txt -> {
-			new Thread(() -> {
-				try {
-					Youtube yt = new Youtube(txt);
-					Video video = new Video(yt);
-
-		            VideoDAO videoDAO = new VideoDAO();
-		            videoDAO.insert(video, null);
-
-		            SwingUtilities.invokeLater(() -> {
-		                JOptionPane.showMessageDialog(searcher, 
-		                        "Video añadido correctamente: " + video.getTitle(),
-		                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
-		            });
-		        } catch (Exception e) {
-
-		        	SwingUtilities.invokeLater(() -> {
-		                JOptionPane.showMessageDialog(searcher, 
-		                        "Error: " + e.getMessage(),
-		                        "Error", JOptionPane.ERROR_MESSAGE);
-		            });
-		        }
-		    }).start();
-		});
+		searcher.setOnEnterAction(txt -> downloadsManger.download(txt));
 	}		
 	
 	private void addEmptySeparator(JPanel containerPanel, GridBagConstraints gbc) {
