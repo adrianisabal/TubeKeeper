@@ -62,7 +62,7 @@ public class Playlist {
     this.videoUrls = apiPlaylist.getVideos();
 
     this.videos = convertVideos(apiPlaylist);
-    this.thumbnail = null;
+    this.thumbnail = new ImageIcon(apiPlaylist.getThumbnailUrl());
   }
   
   private ArrayList<Video> convertVideos(com.github.felipeucelli.javatube.Playlist apiPlaylist) {
@@ -71,7 +71,9 @@ public class Playlist {
       for (String url : videoUrls) {
           Video v;
 		  try {
-			v = new Video(new Youtube(url));
+			Youtube yt = new Youtube(url);
+			com.github.felipeucelli.javatube.Stream stream = yt.streams().getHighestResolution();
+			v = new Video(yt, stream);
 			result.add(v);
 		  } catch (Exception e) {
 			e.printStackTrace();

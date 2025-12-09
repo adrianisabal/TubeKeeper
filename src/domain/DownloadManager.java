@@ -1,8 +1,5 @@
 package domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.SwingUtilities;
 
 import com.github.felipeucelli.javatube.Youtube;

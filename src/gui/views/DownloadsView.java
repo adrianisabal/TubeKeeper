@@ -45,11 +45,7 @@ public class DownloadsView extends View {
 		setHeader();
 		
 		initTable();
-		loadVideosFromDatabase();
-
-    for (Video v : videos) {
-        tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), (int) (Math.random()*512) + "MB"}); 
-    }
+		refreshTable();
 		
 		JScrollPane tableContainer = new JScrollPane(this.downloadsTable); 	
 		
@@ -138,7 +134,7 @@ public class DownloadsView extends View {
 	
 	    if (isSelected) {
 	        label.setBackground(table.getSelectionBackground());
-	        label.setForeground(table.getSelectionForeground());
+	        label.setForeground(table.getForeground());
 	    } else {
 	        label.setBackground(table.getBackground());
 	        label.setForeground(table.getForeground());
@@ -165,6 +161,14 @@ public class DownloadsView extends View {
       videos.addAll(dao.findAll());
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  public void refreshTable() {
+    loadVideosFromDatabase();
+    tableModel.setRowCount(0);
+    for (Video v : videos) {
+      tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), (v.getFileSize() > 0 ? (v.getFileSize() / (1024 * 1024)) + "MB" : "")});
     }
   }
 }
