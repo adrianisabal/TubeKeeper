@@ -16,6 +16,7 @@ import utils.ImageUtils;
 
 public class SearchBar extends JPanel {
 	private String placeholder;
+	private JTextField txtContainer;
 	
 	public SearchBar(String txt) {
 		
@@ -29,7 +30,7 @@ public class SearchBar extends JPanel {
 		iconContainer.setIcon(ImageUtils.resizeImageIcon(new ImageIcon("resources/images/searchIcon.png"),18,18));
 		add(iconContainer, BorderLayout.WEST);
 		
-		JTextField txtContainer = new JTextField(txt);
+		txtContainer = new JTextField(txt);
 		add(txtContainer, BorderLayout.CENTER);
 		
 		//iconContainer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
@@ -59,7 +60,19 @@ public class SearchBar extends JPanel {
 				txtContainer.setText(placeholder);
 			}
 		});
-			
+		
 	}
+	
+	public JTextField getTextContainer() {
+		return txtContainer;
+	}
+	
+	public void setOnEnterAction(java.util.function.Consumer<String> action) {
+		this.txtContainer.addActionListener(e -> {
+			String text = this.txtContainer.getText();
+			action.accept(text);
+		});	
+	}
+	
 }
 	

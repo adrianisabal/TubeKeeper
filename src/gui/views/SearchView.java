@@ -6,8 +6,15 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import com.github.felipeucelli.javatube.Youtube;
+
+import db.VideoDAO;
+import domain.Video;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 
 import utils.ImageUtils;
@@ -56,16 +63,38 @@ public class SearchView extends View {
 	private void defineSearchBar(JPanel containerPanel, GridBagConstraints gbc) {
 		
 		SearchBar searcher = new SearchBar("Insert an URL or Search a video by title");	
-				
-		//searcher.setPreferredSize(new Dimension(300, 40));
-		//searcher.setMaximumSize(new Dimension(500, 80));
 		
 		gbc.gridy = 1;
 
 		containerPanel.add(searcher, gbc);
 		
 		addEmptySeparator(containerPanel, gbc);
-	}
+		
+		searcher.setOnEnterAction(txt -> {
+			new Thread(() -> {
+				try {
+					Youtube yt = new Youtube(txt);
+					Video video = new Video(yt);
+
+		            VideoDAO videoDAO = new VideoDAO();
+		            videoDAO.insert(video, null);
+
+		            SwingUtilities.invokeLater(() -> {
+		                JOptionPane.showMessageDialog(searcher, 
+		                        "Video añadido correctamente: " + video.getTitle(),
+		                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		            });
+		        } catch (Exception e) {
+
+		        	SwingUtilities.invokeLater(() -> {
+		                JOptionPane.showMessageDialog(searcher, 
+		                        "Error: " + e.getMessage(),
+		                        "Error", JOptionPane.ERROR_MESSAGE);
+		            });
+		        }
+		    }).start();
+		});
+	}		
 	
 	private void addEmptySeparator(JPanel containerPanel, GridBagConstraints gbc) {
 		JLabel emptySep = new JLabel();
