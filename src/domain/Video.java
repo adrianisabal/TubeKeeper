@@ -88,10 +88,6 @@ public class Video {
       this.audioTrackName = stream.getAudioTrackName();
       this.audioTrackId = stream.getAudioTrackId();
     }
-
-    if (this.thumbnailUrl != null) {
-      this.thumbnail = new ImageIcon(this.thumbnailUrl);
-    }
   }
 
   private String extractVideoId(String url) {

@@ -2,6 +2,8 @@ package db;
 
 import domain.Video;
 
+import javax.swing.ImageIcon;
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +47,27 @@ public class VideoDAO {
     }
   }
 
+  private ImageIcon buildThumbnail(String thumbUrl) {
+    ImageIcon logo = new ImageIcon("resources/images/logo.png");
+    if (thumbUrl == null || thumbUrl.isEmpty()) {
+      return logo;
+    }
+    try {
+      ImageIcon fromUrl = new ImageIcon(new URL(thumbUrl));
+      if (fromUrl.getIconWidth() > 0 && fromUrl.getIconHeight() > 0) {
+        return fromUrl;
+      } else {
+        return logo;
+      }
+    } catch (Exception e) {
+      return logo;
+    }
+  }
+
   public List<Video> findByPlaylistId(int playlistId) throws SQLException {
     List<Video> result = new ArrayList<>();
 
-    String sql = "SELECT title, author FROM video WHERE playlist_id = ?";
+    String sql = "SELECT title, author, thumbnail_url FROM video WHERE playlist_id = ?";
 
     try (Connection con = DatabaseManager.getConnection();
          PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -59,7 +78,9 @@ public class VideoDAO {
         while (rs.next()) {
           String title = rs.getString("title");
           String author = rs.getString("author");
-          Video v = new Video(title, author);
+          String thumbUrl = rs.getString("thumbnail_url");
+          ImageIcon thumb = buildThumbnail(thumbUrl);
+          Video v = new Video(title, author, thumb);
           result.add(v);
         }
       }
@@ -71,7 +92,7 @@ public class VideoDAO {
   public List<Video> findAll() throws SQLException {
     List<Video> result = new ArrayList<>();
 
-    String sql = "SELECT title, author FROM video";
+    String sql = "SELECT title, author, thumbnail_url FROM video";
 
     try (Connection con = DatabaseManager.getConnection();
          Statement stmt = con.createStatement();
@@ -80,7 +101,9 @@ public class VideoDAO {
       while (rs.next()) {
         String title = rs.getString("title");
         String author = rs.getString("author");
-        Video v = new Video(title, author);
+        String thumbUrl = rs.getString("thumbnail_url");
+        ImageIcon thumb = buildThumbnail(thumbUrl);
+        Video v = new Video(title, author, thumb);
         result.add(v);
       }
     }

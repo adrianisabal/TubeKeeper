@@ -3,8 +3,10 @@ package domain;
 import javax.swing.SwingUtilities;
 
 import com.github.felipeucelli.javatube.Youtube;
+import com.github.felipeucelli.javatube.Stream;
 
 import db.VideoDAO;
+import db.PlaylistDAO;
 import gui.tools.DownloadItemPanel;
 import gui.tools.DownloadsPanel;
 import utils.LinkType;
@@ -15,6 +17,7 @@ public class DownloadManager {
 	
     private DownloadsPanel downloadsPanel;
     private VideoDAO videoDAO = new VideoDAO();
+    private PlaylistDAO playlistDAO = new PlaylistDAO();
 
 
     public DownloadManager(DownloadsPanel downloadsPanel) {
@@ -32,10 +35,21 @@ public class DownloadManager {
             try {
                 LinkType type = LinkType.getLinkType(url);
 
+                if (type == LinkType.UNKNOWN) {
+                    try {
+                        Youtube ytProbe = new Youtube(url);
+                        if (ytProbe.getUrl() != null) {
+                            type = LinkType.VIDEO;
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
+
                 switch (type) {
                     case VIDEO:
                         Youtube yt = new Youtube(url);
-                        Video video = new Video(yt);
+                        Stream bestStream = yt.streams().getHighestResolution();
+                        Video video = new Video(yt, bestStream);
                         
                         itemPanel.setTitle(truncateTitle(video.getTitle()));
 
@@ -48,15 +62,19 @@ public class DownloadManager {
                         break;
 
                     case PLAYLIST:
-                        Playlist playlist = new Playlist(new com.github.felipeucelli.javatube.Playlist(url));
+                        com.github.felipeucelli.javatube.Playlist apiPlaylist =
+                                new com.github.felipeucelli.javatube.Playlist(url);
+                        Playlist playlist = new Playlist(apiPlaylist);
+                        int playlistId = playlistDAO.insert(playlist);
+                        playlist.setDbId(playlistId);
+
                         int total = playlist.getVideos().size();
                         int count = 0;
 
                         itemPanel.setTitle(truncateTitle(playlist.getTitle()));
 
                         for (Video v : playlist.getVideos()) {
-                        	
-                            videoDAO.insert(v, null);
+                            videoDAO.insert(v, playlistId);
                             count++;
                             
                             int progress = (int)((count / (double) total) * 100);
