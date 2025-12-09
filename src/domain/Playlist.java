@@ -5,7 +5,6 @@ import javax.swing.ImageIcon;
 import com.github.felipeucelli.javatube.Youtube;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Playlist {
 
@@ -25,7 +24,7 @@ public class Playlist {
   private ArrayList<Video> videos = new ArrayList<>();
   private ArrayList<String> videoUrls = new ArrayList<>();
 
-  private ImageIcon thumbnail;
+  private ImageIcon thumbnail = new ImageIcon("resources/images/logo.png");
 
   public Playlist(String title) {
     this(title, "Local", null);
@@ -34,7 +33,7 @@ public class Playlist {
   public Playlist(String title, String author, ImageIcon thumbnail) {
     this.title = title;
     this.author = author;
-    this.thumbnail = thumbnail;
+    this.thumbnail = thumbnail != null ? thumbnail : new ImageIcon("resources/images/logo.png");
   }
 
   public Playlist(int dbId, String title, String author) {
@@ -62,7 +61,11 @@ public class Playlist {
     this.videoUrls = apiPlaylist.getVideos();
 
     this.videos = convertVideos(apiPlaylist);
-    this.thumbnail = new ImageIcon(apiPlaylist.getThumbnailUrl());
+    if (!this.videos.isEmpty() && this.videos.get(0).getThumbnail() != null) {
+      this.thumbnail = this.videos.get(0).getThumbnail();
+    } else {
+      this.thumbnail = new ImageIcon("resources/images/logo.png");
+    }
   }
   
   private ArrayList<Video> convertVideos(com.github.felipeucelli.javatube.Playlist apiPlaylist) {
