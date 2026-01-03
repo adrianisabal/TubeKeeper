@@ -5,6 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException; 
 import java.util.Properties;
+import javax.swing.filechooser.FileSystemView;
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
 public class ConfigManager {
 
@@ -38,12 +42,14 @@ public class ConfigManager {
       setDefaults();
     }
   }
-
-  private void setDefaults() {
-    properties.setProperty("language", "Spanish");
-    properties.setProperty("theme", "Bright");
+ 
+  public void setDefaults() {
+    properties.setProperty("manualRes", "false");
+    properties.setProperty("resolution", getDefaultResolution());
+    properties.setProperty("downloadPath", getDefaultDownloadPath());
     properties.setProperty("defaultSort", "Most Recent");
-    properties.setProperty("shareData", "true");
+    properties.setProperty("saveHistory", "true");
+    properties.setProperty("demoMode", "true");
   }
 
   public void save() {
@@ -54,20 +60,45 @@ public class ConfigManager {
     }
   }
 
-  public String getLanguage() {
-    return properties.getProperty("language");
+  private String getDefaultDownloadPath() {
+    File homeDir = FileSystemView.getFileSystemView().getHomeDirectory();
+    File downloadsDir = new File(homeDir, "Downloads");
+    if (!downloadsDir.exists() || !downloadsDir.isDirectory()) {
+        downloadsDir = new File(homeDir, "Downloads");
+    }
+    if (!downloadsDir.exists()) {
+        downloadsDir.mkdirs();
+    }
+    return downloadsDir.getAbsolutePath().toString();
+  }
+ 
+  private String getDefaultResolution() {
+    Toolkit toolkit = Toolkit.getDefaultToolkit();
+    return toolkit.getScreenSize().toString();
   }
 
-  public void setLanguage(String language) {
-    properties.setProperty("language", language);
+  public boolean isManualRes() {
+    return Boolean.parseBoolean(properties.getProperty("manualRes"));
   }
 
-  public String getTheme() {
-    return properties.getProperty("theme");
+  public void setManualRes(boolean b) {
+    properties.setProperty("manualRes", Boolean.toString(b));
   }
 
-  public void setTheme(String theme) {
-    properties.setProperty("theme", theme);
+  public String getResolution() {
+    return properties.getProperty("resolution");
+  }
+
+  public void setResolution(Dimension resolution) {
+    properties.setProperty("resolution", resolution.toString());
+  }
+
+  public String getDownloadPath() {
+    return properties.getProperty("downloadPath");
+  }
+
+  public void setDownloadPath(String downloadPath) {
+    properties.setProperty("downloadPath", downloadPath);
   }
 
   public String getDefaultSort() {
@@ -78,11 +109,19 @@ public class ConfigManager {
     properties.setProperty("defaultSort", defaultSort);
   }
 
-  public boolean isShareData() {
-    return Boolean.parseBoolean(properties.getProperty("shareData", "true"));
+  public boolean isSaveHistory() {
+    return Boolean.parseBoolean(properties.getProperty("saveHistory"));
   }
 
-  public void setShareData(boolean shareData) {
-    properties.setProperty("shareData", Boolean.toString(shareData));
+  public void setSaveHistory(boolean saveHistory) {
+    properties.setProperty("saveHistory", Boolean.toString(saveHistory));
+  }
+
+  public boolean isDemoMode() {
+    return Boolean.parseBoolean(properties.getProperty("demoMode"));
+  }
+
+  public void setDemoMode(boolean b) {
+    properties.setProperty("demoMode", Boolean.toString(b));
   }
 }

@@ -1,7 +1,6 @@
 package gui.tools;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -52,15 +51,13 @@ public class SearchBar extends JPanel {
 				txtContainer.setText("");
 			}
 		});
-		
-		
+			
 		txtContainer.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				txtContainer.setText(placeholder);
 			}
 		});
-		
 	}
 	
 	public JTextField getTextContainer() {
@@ -72,7 +69,5 @@ public class SearchBar extends JPanel {
 			String text = this.txtContainer.getText();
 			action.accept(text);
 		});	
-	}
-	
-}
-	
+	}	
+}	
