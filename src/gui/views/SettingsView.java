@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Vector;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -22,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+
 import javax.swing.JOptionPane;
 
 import gui.tools.DefaultButton;
@@ -43,6 +46,8 @@ public class SettingsView extends JFrame {
   JComboBox<String> sortCombo;
   JCheckBox historyCheck;
   JCheckBox demoCheck;
+  JComboBox<String> fileTypeCombo;
+  JComboBox<String> policyCombo; 
 
   public SettingsView() {
     super();
@@ -76,41 +81,19 @@ public class SettingsView extends JFrame {
       }
     });
 
-    resPanel.add(createSubPanel(new FlowLayout(FlowLayout.CENTER),
+    FlowLayout defaultFlowLayout = new FlowLayout(FlowLayout.CENTER);
+    resPanel.add(createSubPanel(defaultFlowLayout,
         new JLabel("Manually set window resolution: "),
         manualResCheck));
 
-    resPanel.add(createSubPanel(new FlowLayout(FlowLayout.CENTER),
+    resPanel.add(createSubPanel(defaultFlowLayout,
         horizontalRes,
         new JLabel("x"),
         verticalRes));
 
     mainPanel.add(resPanel);
 
-    JLabel pathTitle = createDefaultJLabel("Default video download path: ");
-    pathTitle.setFont(new Font("Dialog", Font.BOLD, 18));
-    mainPanel.add(pathTitle);
-
-    JPanel pathPanel = createSubPanel(new FlowLayout(FlowLayout.CENTER));
-    pathButton = new JButton("/path/to/download/folder/", ImageUtils.resizeImageIcon(new ImageIcon("resources/images/folderIcon.png"), 20, 20));
-    pathButton.setContentAreaFilled(false);
-    pathButton.setOpaque(false);
-    pathButton.setCursor(handCursor);
-    pathButton.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-           JFileChooser jfc = new JFileChooser();
-           jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-           if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-              pathButton.setText(jfc.getSelectedFile().toPath().toString());
-           }
-        }
-    });
-    
-    pathPanel.add(pathButton);
-    mainPanel.add(pathPanel);
-
-    JPanel sortPanel = createSubPanel(new FlowLayout(FlowLayout.CENTER));
+    JPanel sortPanel = createSubPanel(defaultFlowLayout);
 		String[] sortOptions = {"Most Recent", "Oldest", "Title A-Z", "Title Z-A", "Longest Duration", "Shortest Duration"};
 		
     JLabel sortLabel = createDefaultJLabel("Preferred download sort: ");
@@ -128,7 +111,7 @@ public class SettingsView extends JFrame {
     historyCheck.setOpaque(false);
     JLabel historyLabel =  createDefaultJLabel("Save download history: ");
     historyLabel.setFont(new Font("Dialog", Font.BOLD, 18));
-    mainPanel.add(createSubPanel(new FlowLayout(FlowLayout.CENTER),
+    mainPanel.add(createSubPanel(defaultFlowLayout,
        historyLabel,
        historyCheck));
 
@@ -136,9 +119,48 @@ public class SettingsView extends JFrame {
     demoCheck.setSelected(true);
     demoCheck.setCursor(handCursor);
     demoCheck.setOpaque(false);
-    mainPanel.add(createSubPanel(new FlowLayout(FlowLayout.CENTER),
+    mainPanel.add(createSubPanel(defaultFlowLayout,
           createDefaultJLabel("Demo Mode (create example data): "),
-          demoCheck));
+          demoCheck)); 
+    
+    JLabel downloadLabel = createDefaultJLabel("Downloads settings: ");
+    downloadLabel.setFont(new Font("Dialog", Font.BOLD, 20));
+    mainPanel.add(downloadLabel);
+
+    JLabel pathTitle = createDefaultJLabel("Default video download path: ");
+    pathTitle.setFont(new Font("Dialog", Font.BOLD, 14));
+    mainPanel.add(pathTitle);
+
+    pathButton = new JButton("/path/to/download/folder/", ImageUtils.resizeImageIcon(new ImageIcon("resources/images/folderIcon.png"), 20, 20));
+    pathButton.setContentAreaFilled(false);
+    pathButton.setOpaque(false);
+    pathButton.setCursor(handCursor);
+    pathButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+           JFileChooser jfc = new JFileChooser();
+           jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+           if (jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+              pathButton.setText(jfc.getSelectedFile().toPath().toString());
+           }
+        }
+    });
+    mainPanel.add(createSubPanel(defaultFlowLayout, pathButton));
+
+    fileTypeCombo = new JComboBox<String>(new Vector<String>(Arrays.asList("mp4", "mp3")));
+    fileTypeCombo.setCursor(handCursor);
+    policyCombo = new JComboBox<String>(new Vector<String>(Arrays.asList("Highest quality", "Balanced", "Lowest quality")));
+    policyCombo.setCursor(handCursor);
+    JPanel fileTypePanel = createSubPanel(defaultFlowLayout, 
+        createDefaultJLabel("Download file type: "),
+        fileTypeCombo,
+        createDefaultJLabel("Download policy: "),
+        policyCombo
+        );
+
+    mainPanel.add(createSubPanel(defaultFlowLayout,
+          fileTypePanel
+          ));
 
     // TODO: Implement delete history button
 /*
@@ -165,13 +187,13 @@ public class SettingsView extends JFrame {
         ConfigManager cfg = new ConfigManager();
         cfg.setDefaults();
         cfg.save();
+        loadCurrentConfig();
         JOptionPane.showMessageDialog(this, 
             "Default settings restored.", 
             "Restored", 
             JOptionPane.INFORMATION_MESSAGE);
-        repaint();
     });
-    mainPanel.add(createSubPanel(new FlowLayout(FlowLayout.CENTER), 
+    mainPanel.add(createSubPanel(defaultFlowLayout, 
         saveButton,
         restoreButton));
 
@@ -244,6 +266,16 @@ public class SettingsView extends JFrame {
     if (demoMode != null) {
       demoCheck.setSelected(demoMode);
     }
+
+    String fileType = cfg.getFileType();
+    if (fileType != null) {
+      fileTypeCombo.setSelectedItem(fileType);
+    }
+
+    String policy = cfg.getPolicy();
+    if (policy != null) {
+      policyCombo.setSelectedItem(policy);
+    }
   }
 
   private void saveConfig() {
@@ -255,7 +287,8 @@ public class SettingsView extends JFrame {
     cfg.setDefaultSort((String) sortCombo.getSelectedItem());
     cfg.setSaveHistory(historyCheck.isSelected());
     cfg.setDemoMode(demoCheck.isSelected());
-
+    cfg.setFileType((String) fileTypeCombo.getSelectedItem());
+    cfg.setPolicy((String) policyCombo.getSelectedItem());
     cfg.save();
   }
 }

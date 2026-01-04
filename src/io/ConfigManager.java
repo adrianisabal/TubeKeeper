@@ -50,6 +50,8 @@ public class ConfigManager {
     properties.setProperty("defaultSort", "Most Recent");
     properties.setProperty("saveHistory", "true");
     properties.setProperty("demoMode", "true");
+    properties.setProperty("fileType", "mp4");
+    properties.setProperty("policy", "Highest quality");
   }
 
   public void save() {
@@ -123,5 +125,21 @@ public class ConfigManager {
 
   public void setDemoMode(boolean b) {
     properties.setProperty("demoMode", Boolean.toString(b));
+  }
+
+  public String getFileType () {
+    return properties.getProperty("fileType");
+  }
+
+  public void setFileType (String s) {
+    properties.setProperty("fileType", s);
+  }
+
+  public String getPolicy () {
+    return properties.getProperty("policy");
+  }
+
+  public void setPolicy (String s) {
+    properties.setProperty("policy", s);
   }
 }
