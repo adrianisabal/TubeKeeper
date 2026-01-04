@@ -1,7 +1,5 @@
 package domain;
 
-import java.util.ArrayList;
-
 import javax.swing.SwingUtilities;
 
 import com.github.felipeucelli.javatube.Youtube;
@@ -64,14 +62,25 @@ public class DownloadManager {
                         break;
 
                     case PLAYLIST:
-                        com.github.felipeucelli.javatube.Playlist apiPlaylist = new com.github.felipeucelli.javatube.Playlist(url);
+                        com.github.felipeucelli.javatube.Playlist apiPlaylist =
+                                new com.github.felipeucelli.javatube.Playlist(url);
                         Playlist playlist = new Playlist(apiPlaylist);
-                        convertVideos(playlist, itemPanel);
-
                         int playlistId = playlistDAO.insert(playlist);
                         playlist.setDbId(playlistId);
 
+                        int total = playlist.getVideos().size();
+                        int count = 0;
 
+                        itemPanel.setTitle(truncateTitle(playlist.getTitle()));
+
+                        for (Video v : playlist.getVideos()) {
+                            videoDAO.insert(v, playlistId);
+                            count++;
+                            
+                            int progress = (int)((count / (double) total) * 100);
+                            itemPanel.setProgress(progress);
+                            Thread.sleep(100);
+                        }
                         break;
 
                     default:
@@ -108,34 +117,5 @@ public class DownloadManager {
         if (title.length() <= MAX_TITLE_LENGTH) return title;
         return title.substring(0, MAX_TITLE_LENGTH - 3) + "...";
     }
-    
-    private void convertVideos(Playlist playlist, DownloadItemPanel itemPanel) {
-
-    	int total = playlist.getVideos().size();
-    	int count = 0;
-  	  
-    	itemPanel.setTitle(truncateTitle(playlist.getTitle()));
-
-    	for (String url : playlist.getVideoUrls()) {
-            
-  		  try {
-  			Youtube yt = new Youtube(url);
-  			com.github.felipeucelli.javatube.Stream stream = yt.streams().getHighestResolution();
-  			Video v = new Video(yt, stream);
-  			
-            videoDAO.insert(v, playlist.getNumericId());
-            count++;
-            
-            int progress = (int)((count / (double) total) * 100);
-            itemPanel.setProgress(progress);
-            
-  		
-  		  } catch (Exception e) {
-  			e.printStackTrace();
-  		  }
-        }
-
-    }
-
 
 }
