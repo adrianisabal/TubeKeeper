@@ -1,7 +1,9 @@
 package db;
 
 import domain.Playlist;
+import domain.Video;
 
+import javax.swing.ImageIcon;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,15 @@ public class PlaylistDAO {
         String title = rs.getString("title");
         String author = rs.getString("author");
         Playlist p = new Playlist(id, title, author);
+
+        VideoDAO videoDAO = new VideoDAO();
+        List<Video> videos = videoDAO.findByPlaylistId(id);
+        if (!videos.isEmpty() && videos.get(0).getThumbnail() != null) {
+          ImageIcon thumb = videos.get(0).getThumbnail();
+          p = new Playlist(title, author, thumb);
+          p.setDbId(id);
+        }
+
         result.add(p);
       }
     }
