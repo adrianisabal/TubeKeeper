@@ -60,7 +60,8 @@ public class Playlist {
     this.url = apiPlaylist.getUrl();
     this.videoUrls = apiPlaylist.getVideos();
 
-    this.videos = convertVideos(apiPlaylist);
+    this.videos = new ArrayList<Video>();
+    
     if (!this.videos.isEmpty() && this.videos.get(0).getThumbnail() != null) {
       this.thumbnail = this.videos.get(0).getThumbnail();
     } else {
@@ -68,23 +69,6 @@ public class Playlist {
     }
   }
   
-  private ArrayList<Video> convertVideos(com.github.felipeucelli.javatube.Playlist apiPlaylist) {
-	  ArrayList<Video> result = new ArrayList<>();
-	  
-      for (String url : videoUrls) {
-          Video v;
-		  try {
-			Youtube yt = new Youtube(url);
-			com.github.felipeucelli.javatube.Stream stream = yt.streams().getHighestResolution();
-			v = new Video(yt, stream);
-			result.add(v);
-		  } catch (Exception e) {
-			e.printStackTrace();
-		  }
-      }
-
-      return result;
-  }
 
   public int getDbId() {
     return dbId;
@@ -97,6 +81,10 @@ public class Playlist {
   public String getId() {
     return id;
   }
+  
+  public int getNumericId() {
+	    return Integer.parseInt(id);
+	}
 
   public String getTitle() {
     return title;
