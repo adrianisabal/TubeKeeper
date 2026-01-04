@@ -163,7 +163,7 @@ public class SettingsView extends JFrame {
         policyCombo
         ));
 
-    JButton deleteHistory = new DefaultButton("Delete Download History");
+    JButton deleteHistory = new DefaultButton("Delete all download data");
     deleteHistory.setCursor(handCursor);
     deleteHistory.setFont(new Font("Dialog", Font.BOLD, 12));
     deleteHistory.addActionListener(new ActionListener() {
@@ -171,7 +171,10 @@ public class SettingsView extends JFrame {
       public void actionPerformed(ActionEvent arg0) { 
         int confirm = JOptionPane.showConfirmDialog(
         SettingsView.this,
-        "Are you sure you want to delete all download history?\nThis action cannot be undone.",
+        "Are you sure you want to delete all download data?\n" +
+        "This action cannot be undone.\n" +
+        "Playlists and download history will be deleted.\n" +
+        "(Local files will be preserved)",
         "Confirm Delete",
         JOptionPane.YES_NO_OPTION,
         JOptionPane.WARNING_MESSAGE
