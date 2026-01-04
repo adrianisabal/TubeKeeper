@@ -76,7 +76,7 @@ public class SearchView extends View {
 	
 	private void defineSearchBar(JPanel containerPanel, GridBagConstraints gbc) {
 		
-		SearchBar searcher = new SearchBar("Insert an URL or Search a video by title");	
+		SearchBar searcher = new SearchBar("Insert an URL");	
 		
 		gbc.gridy = 1;
 
