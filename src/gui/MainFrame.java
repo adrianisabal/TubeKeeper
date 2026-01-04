@@ -13,6 +13,8 @@ import java.util.Map;
 
 import domain.Playlist;
 import gui.views.View;
+import io.ConfigManager;
+import utils.ImageUtils;
 import gui.views.SearchView;
 import gui.tools.Sidebar;
 import gui.views.DownloadsView;
@@ -38,7 +40,12 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
 
-        setSize(1200, 800);
+        ConfigManager cfg = new ConfigManager();
+        if (cfg.isManualRes()) {
+          setSize(ImageUtils.parseDimension(cfg.getResolution()));
+        } else {
+          setSize(1200, 800);
+        }
         setTitle("TubeKeeper");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

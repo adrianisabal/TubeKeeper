@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Vector;
 import java.awt.BorderLayout;
@@ -24,6 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+
+import db.DatabaseManager;
 
 import javax.swing.JOptionPane;
 
@@ -151,25 +156,52 @@ public class SettingsView extends JFrame {
     fileTypeCombo.setCursor(handCursor);
     policyCombo = new JComboBox<String>(new Vector<String>(Arrays.asList("Highest quality", "Balanced", "Lowest quality")));
     policyCombo.setCursor(handCursor);
-    JPanel fileTypePanel = createSubPanel(defaultFlowLayout, 
+    mainPanel.add(createSubPanel(defaultFlowLayout, 
         createDefaultJLabel("Download file type: "),
         fileTypeCombo,
         createDefaultJLabel("Download policy: "),
         policyCombo
-        );
+        ));
 
-    mainPanel.add(createSubPanel(defaultFlowLayout,
-          fileTypePanel
-          ));
-
-    // TODO: Implement delete history button
-/*
     JButton deleteHistory = new DefaultButton("Delete Download History");
+    deleteHistory.setCursor(handCursor);
+    deleteHistory.setFont(new Font("Dialog", Font.BOLD, 12));
     deleteHistory.addActionListener(new ActionListener() {
-      
-    });
-    mainPanel.add();
-*/
+      @Override
+      public void actionPerformed(ActionEvent arg0) { 
+        int confirm = JOptionPane.showConfirmDialog(
+        SettingsView.this,
+        "Are you sure you want to delete all download history?\nThis action cannot be undone.",
+        "Confirm Delete",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE
+        );
+      if (confirm == JOptionPane.YES_OPTION) {
+        try {
+          try (Connection con = DatabaseManager.getConnection();
+               Statement stmt = con.createStatement()) {
+            stmt.executeUpdate("DELETE FROM video");
+            stmt.executeUpdate("DELETE FROM playlist");
+            JOptionPane.showMessageDialog(
+              SettingsView.this, 
+              "Download history deleted successfully.", 
+              "Success", 
+              JOptionPane.INFORMATION_MESSAGE
+            );
+          }
+        } catch (SQLException ex) {
+          ex.printStackTrace();
+          JOptionPane.showMessageDialog(
+              SettingsView.this, 
+              "Error deleting history: " + ex.getMessage(), 
+              "Error", 
+              JOptionPane.ERROR_MESSAGE
+          );
+        }
+      }
+    }});
+    mainPanel.add(deleteHistory);
+
     DefaultButton saveButton = new DefaultButton("Save current settings");
     saveButton.setFont(new Font("Dialog", Font.BOLD, 14));
     saveButton.setCursor(handCursor);
@@ -239,6 +271,8 @@ public class SettingsView extends JFrame {
     Boolean manualRes = cfg.isManualRes();
     if (manualRes != null) {
       manualResCheck.setSelected(manualRes);
+      horizontalRes.setEnabled(manualRes);
+      verticalRes.setEnabled(manualRes);
     }
     
     Dimension resolution = ImageUtils.parseDimension(cfg.getResolution());

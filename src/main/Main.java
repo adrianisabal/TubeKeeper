@@ -4,6 +4,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.ImageIcon;
 
 import gui.MainFrame;
+import io.ConfigManager;
 import domain.Video;
 import domain.Playlist;
 import db.DatabaseManager;
@@ -19,13 +20,15 @@ public class Main {
     public static ArrayList<Playlist> SAMPLE_PLAYLISTS = new ArrayList<>();
 
     public static void main(String[] args) {
-        DatabaseManager.initializeDatabase();
-        try {
-            initializeSampleDataIfEmpty();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        ConfigManager cfg = new ConfigManager();
+        if (cfg.isDemoMode()) {
+          DatabaseManager.initializeDatabase();
+          try {
+              initializeSampleDataIfEmpty();
+          } catch (SQLException e) {
+              e.printStackTrace();
+          }
         }
-
         SwingUtilities.invokeLater(() -> new MainFrame());
     }
 
