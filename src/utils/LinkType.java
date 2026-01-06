@@ -11,7 +11,7 @@ import java.net.URISyntaxException;
 // CHAT-GPT Generated
 
 public enum LinkType {
-    VIDEO, PLAYLIST, UNKNOWN;
+    VIDEO, PLAYLIST, PLAYLIST_VIDEO, UNKNOWN;
 
 	public static LinkType getLinkType(String url) {
 	    try {

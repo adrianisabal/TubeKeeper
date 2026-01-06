@@ -60,12 +60,10 @@ public class Playlist {
     this.url = apiPlaylist.getUrl();
     this.videoUrls = apiPlaylist.getVideos();
 
-    this.videos = convertVideos(apiPlaylist);
-    if (!this.videos.isEmpty() && this.videos.get(0).getThumbnail() != null) {
-      this.thumbnail = this.videos.get(0).getThumbnail();
-    } else {
-      this.thumbnail = new ImageIcon("resources/images/logo.png");
-    }
+//  this.videos = convertVideos(apiPlaylist);
+    this.videos = new ArrayList<Video>();
+    
+
   }
   
   private ArrayList<Video> convertVideos(com.github.felipeucelli.javatube.Playlist apiPlaylist) {
@@ -86,6 +84,20 @@ public class Playlist {
       return result;
   }
 
+  
+  public void setThumbnail() {
+	  for (Video v : this.videos) {
+		  ImageIcon videoThumbnail = v.getThumbnail();
+		  if (thumbnail != null) {
+			  this.thumbnail = videoThumbnail;
+			  return;
+		  }
+	  this.thumbnail = new ImageIcon("resources/images/logo.png");
+	  }
+	      
+	      
+  }
+  
   public int getDbId() {
     return dbId;
   }
