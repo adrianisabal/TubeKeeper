@@ -49,7 +49,8 @@ public class DownloadManager {
                     case VIDEO:
 
                         Video video = downloadVideo(url, null);
-                        itemPanel.setTitle(truncateTitle(video.getTitle()));
+                        String vTitle = video.getTitle();
+                        itemPanel.setTitle(truncateTitle(vTitle), vTitle);
 
                         for (int i = 0; i <= 100; i += 10) {
                             itemPanel.setProgress(i);
@@ -60,8 +61,9 @@ public class DownloadManager {
                     case PLAYLIST:
                         
                     	playlist = downloadPlaylist(url);
-                        itemPanel.setTitle(truncateTitle(playlist.getTitle()));
-
+                        String pTitle = playlist.getTitle();
+                        itemPanel.setTitle(truncateTitle(pTitle), pTitle);
+                        
                     	downloadRec(playlist.getVideoUrls().get(0), LinkType.PLAYLIST_VIDEO, itemPanel, playlist, videoIndx);
                     	playlist.setThumbnail();
                         break;
@@ -81,7 +83,8 @@ public class DownloadManager {
                 }
 
             } catch (Exception e) {
-            	itemPanel.setTitle(truncateTitle(String.format("Error: %s", e.getMessage())));
+            	String errorTitle = String.format("Error: %s", e.getMessage());
+                itemPanel.setTitle(truncateTitle(errorTitle), errorTitle);
             	itemPanel.getTitleLabel().setToolTipText(e.getMessage());
             	
             } finally {

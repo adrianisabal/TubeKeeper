@@ -40,8 +40,12 @@ public class DownloadItemPanel extends JPanel {
         SwingUtilities.invokeLater(() -> progressBar.setValue(value));
     }
 
-    public void setTitle(String title) {
-        SwingUtilities.invokeLater(() -> titleLabel.setText(title));
+    public void setTitle(String shortTitle, String fullTtitle) {
+        SwingUtilities.invokeLater(() -> {
+        titleLabel.setText(shortTitle);
+        titleLabel.setToolTipText(fullTtitle);
+        });
+        	
     }
     
     public JLabel getTitleLabel() {
