@@ -62,7 +62,7 @@ public class DownloadsView extends View {
 	}
 	
 	private void setHeader() {
-		SearchBar searcher = new SearchBar("Search your video by its title/author");
+		SearchBar searcher = new SearchBar("Search your video by its title / author", false);
 		configureFilter(searcher, this.sorter);
 
 		GridBagConstraints gbc = defineConstraints();

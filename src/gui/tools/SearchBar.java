@@ -16,11 +16,13 @@ import utils.ImageUtils;
 public class SearchBar extends JPanel {
 	private String placeholder;
 	private JTextField txtContainer;
-	
-	public SearchBar(String txt) {
+    private boolean clearOnFocusLost; 
+    
+	public SearchBar(String txt, boolean clearOnFocusLost) {
 		
 		this.placeholder = txt;
-		
+        this.clearOnFocusLost = clearOnFocusLost;
+        
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(300,50));
 		
@@ -32,31 +34,32 @@ public class SearchBar extends JPanel {
 		txtContainer = new JTextField(txt);
 		add(txtContainer, BorderLayout.CENTER);
 		
-		//iconContainer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
 		txtContainer.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
 		txtContainer.setAlignmentY(CENTER_ALIGNMENT);
 		txtContainer.setBackground(null);
 		
-		//setBorder(BorderFactory.createLineBorder(new Color(45,45,48)));
 		setBorder(BorderFactory.createCompoundBorder(
 				new RoundedBorder(15),
 				BorderFactory.createEmptyBorder(0,0,0,0)
 				));
 		
-		//setBorder(new RoundedBorder(15));
 		
 		txtContainer.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				txtContainer.setText("");
-			}
-		});
-			
-		txtContainer.addFocusListener(new FocusAdapter() {
+				  if (txtContainer.getText().equals(placeholder)) {
+	                    txtContainer.setText("");
+	                }			
+		   }
+
 			@Override
 			public void focusLost(FocusEvent e) {
-				txtContainer.setText(placeholder);
-			}
+				if (clearOnFocusLost) {
+                    txtContainer.setText(placeholder);
+				} else if (txtContainer.getText().isBlank()) {
+                    txtContainer.setText(placeholder);
+                }
+            }
 		});
 	}
 	
