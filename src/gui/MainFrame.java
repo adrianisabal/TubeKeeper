@@ -14,6 +14,7 @@ import java.util.Map;
 import domain.Playlist;
 import gui.views.View;
 import io.ConfigManager;
+import io.FFmpegManager;
 import utils.ImageUtils;
 import gui.views.SearchView;
 import gui.tools.Sidebar;
@@ -39,7 +40,7 @@ public class MainFrame extends JFrame {
     private SettingsView settingsView;
 
     public MainFrame() {
-
+        FFmpegManager.begin(contentPanel);
         ConfigManager cfg = new ConfigManager();
         if (cfg.isManualRes()) {
           setSize(ImageUtils.parseDimension(cfg.getResolution()));

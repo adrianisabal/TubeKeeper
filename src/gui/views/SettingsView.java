@@ -154,7 +154,7 @@ public class SettingsView extends JFrame {
 
     fileTypeCombo = new JComboBox<String>(new Vector<String>(Arrays.asList("mp4", "mp3")));
     fileTypeCombo.setCursor(handCursor);
-    policyCombo = new JComboBox<String>(new Vector<String>(Arrays.asList("Highest quality", "Balanced", "Lowest quality")));
+    policyCombo = new JComboBox<String>(new Vector<String>(Arrays.asList("Highest quality", "Light (360p max, no FFmpeg)", "Lowest quality")));
     policyCombo.setCursor(handCursor);
     mainPanel.add(createSubPanel(defaultFlowLayout, 
         createDefaultJLabel("Download file type: "),

@@ -5,6 +5,7 @@
 /bin/
 /build/
 /target/
+/lib/ffmpeg/
 
 # Configuración de IDEs
 .idea/
