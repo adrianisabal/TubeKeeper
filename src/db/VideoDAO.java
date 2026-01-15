@@ -67,7 +67,7 @@ public class VideoDAO {
   public List<Video> findByPlaylistId(int playlistId) throws SQLException {
     List<Video> result = new ArrayList<>();
 
-    String sql = "SELECT title, author, thumbnail_url FROM video WHERE playlist_id = ?";
+    String sql = "SELECT title, author, thumbnail_url, file_size FROM video WHERE playlist_id = ?";
 
     try (Connection con = DatabaseManager.getConnection();
          PreparedStatement pstmt = con.prepareStatement(sql)) {
@@ -79,8 +79,9 @@ public class VideoDAO {
           String title = rs.getString("title");
           String author = rs.getString("author");
           String thumbUrl = rs.getString("thumbnail_url");
+          long size = rs.getLong("file_size");
           ImageIcon thumb = buildThumbnail(thumbUrl);
-          Video v = new Video(title, author, thumb);
+          Video v = new Video(title, author, thumb, size);
           result.add(v);
         }
       }
@@ -92,7 +93,7 @@ public class VideoDAO {
   public List<Video> findAll() throws SQLException {
     List<Video> result = new ArrayList<>();
 
-    String sql = "SELECT title, author, thumbnail_url FROM video";
+    String sql = "SELECT title, author, thumbnail_url, file_size FROM video";
 
     try (Connection con = DatabaseManager.getConnection();
          Statement stmt = con.createStatement();
@@ -102,8 +103,9 @@ public class VideoDAO {
         String title = rs.getString("title");
         String author = rs.getString("author");
         String thumbUrl = rs.getString("thumbnail_url");
+        long size = rs.getLong("file_size");
         ImageIcon thumb = buildThumbnail(thumbUrl);
-        Video v = new Video(title, author, thumb);
+        Video v = new Video(title, author, thumb, size);
         result.add(v);
       }
     }

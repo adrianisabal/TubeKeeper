@@ -41,9 +41,16 @@ public class Video {
   }
 
   public Video(String title, String author, ImageIcon thumbnail) {
+	  this.title = title;
+	  this.author = author;
+	  this.thumbnail = thumbnail;
+  }
+  
+  public Video(String title, String author, ImageIcon thumbnail, long fileSize) {
     this.title = title;
     this.author = author;
     this.thumbnail = thumbnail;
+    this.fileSize = fileSize;
   }
 
   public Video(Youtube youtube, Stream stream) throws Exception {

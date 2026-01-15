@@ -121,6 +121,7 @@ public class DownloadsView extends View {
 		
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
+	centerRenderer.setOpaque(true);
 	for (int i = 1; i < downloadsTable.getColumnCount(); i++) {
 		downloadsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 	}
@@ -153,19 +154,10 @@ public class DownloadsView extends View {
 	        ImageIcon originalIcon = (ImageIcon) value;
 	        ImageIcon resizedIcon = ImageUtils.resizeImageIcon(originalIcon, 70, 70);
 	        label.setIcon(resizedIcon);
-	        label.setText(""); 
 	    } else {
 	        label.setIcon(null);
 	        label.setText(value != null ? value.toString() : "");
 	    }
-
-	    label.setToolTipText(value.toString());
-//        int modelColumn = table.convertColumnIndexToModel(column);
-//        if (modelColumn == 2 || modelColumn == 3) {
-//            label.setToolTipText(value.toString());
-//        } else {
-//            label.setToolTipText(null);
-//        }
 	    
 	    return label;
 	  }
@@ -245,7 +237,14 @@ public class DownloadsView extends View {
 		  tableModel.setRowCount(0);
 		  
 		  for (Video v : videos) {
-			  tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), (v.getFileSize() > 0 ? (v.getFileSize() / (1024 * 1024)) + "MB" : "")});
+			  String sizeString;
+		      if (v.getFileSize() > 0) {
+		           double sizeInMb = v.getFileSize() / (1024.0 * 1024.0);
+		           sizeString = String.format("%.2f MB", sizeInMb);
+		      } else {
+		           sizeString = "0 MB";
+		      }
+			  tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), sizeString});
 		  }
 	  }
 	  
