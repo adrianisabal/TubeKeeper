@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 
 import java.awt.Component;
@@ -24,6 +25,7 @@ import java.awt.Dimension;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import gui.tools.SearchBar;
 import gui.tools.VideoDetailsPanel;
@@ -36,16 +38,17 @@ public class DownloadsView extends View {
 	
 	private JTable downloadsTable;
 	private DefaultTableModel tableModel;
+	private TableRowSorter<DefaultTableModel> sorter;
 	private VideoDetailsPanel detailsPanel;
   private ArrayList<Video> videos = new ArrayList<>();
 	
 	public DownloadsView() {
 		super(ViewType.MAIN_VIEW, "Downloads");
 				
-		setHeader();
-		
 		initTable();
 		refreshTable();
+		
+		setHeader();
 		
 		JScrollPane tableContainer = new JScrollPane(this.downloadsTable); 	
 		
@@ -59,7 +62,9 @@ public class DownloadsView extends View {
 	}
 	
 	private void setHeader() {
-		SearchBar searcher = new SearchBar("Search your video by its title");
+		SearchBar searcher = new SearchBar("Search your video by its title/author");
+		configureFilter(searcher, this.sorter);
+
 		GridBagConstraints gbc = defineConstraints();
 		
 		getHeaderPanel().add(searcher, gbc);
@@ -95,6 +100,8 @@ public class DownloadsView extends View {
 		this.downloadsTable = new JTable(this.tableModel);
 		this.downloadsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
+		this.sorter = new TableRowSorter<>(tableModel);
+		this.downloadsTable.setRowSorter(sorter);
 		
 		TableColumn hiddenCol = this.downloadsTable.getColumnModel().getColumn(0);
 		hiddenCol.setWidth(0);
@@ -153,7 +160,42 @@ public class DownloadsView extends View {
 	  }
 	  });
 	}
+	
+  
+	private void configureFilter(SearchBar searchBar, TableRowSorter<DefaultTableModel> sorter) {
 
+		searchBar.setOnEnterAction(text -> {
+		
+		if (text == null || text.isBlank() || text.equals("Search your video by its title/author")) {
+			sorter.setRowFilter(null);
+			return;
+		}
+		
+		sorter.setRowFilter(createFilter(text));
+		});
+		}
+	
+	
+	private RowFilter<DefaultTableModel, Object> createFilter(String text) {
+
+	    return new RowFilter<>() {
+	        @Override
+	        public boolean include(Entry<? extends DefaultTableModel, ?> entry) {
+
+	            String title  = entry.getStringValue(2);
+	            String author = entry.getStringValue(3);
+
+	            String filtro = text.toLowerCase();
+
+	            return title.toLowerCase().contains(filtro)
+	                || author.toLowerCase().contains(filtro);
+	        }
+	    };
+	}
+
+
+
+	
   private void loadVideosFromDatabase() {
     videos.clear();
     try {
