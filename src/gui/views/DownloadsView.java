@@ -63,7 +63,7 @@ public class DownloadsView extends View {
 	
 	private void setHeader() {
 		SearchBar searcher = new SearchBar("Search your video by its title / author", false);
-		configureFilter(searcher, this.sorter);
+		configureSorter(searcher, this.sorter);
 
 		GridBagConstraints gbc = defineConstraints();
 		
@@ -94,7 +94,7 @@ public class DownloadsView extends View {
 	        }
 	    };
 	    
-		this.downloadsTable = new JTable(this.tableModel);
+		this.downloadsTable = createTable();
 		this.downloadsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		this.sorter = new TableRowSorter<>(tableModel);
@@ -113,6 +113,11 @@ public class DownloadsView extends View {
 				detailsPanel.updateVideoDetails(video);
 			}
 		});
+		
+		setRenderer();
+	}
+	
+	private void setRenderer() {
 		
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
@@ -143,6 +148,7 @@ public class DownloadsView extends View {
 	        label.setBackground(table.getBackground());
 	        label.setForeground(table.getForeground());
 	    }
+	    
 	    if (value instanceof ImageIcon) {
 	        ImageIcon originalIcon = (ImageIcon) value;
 	        ImageIcon resizedIcon = ImageUtils.resizeImageIcon(originalIcon, 70, 70);
@@ -152,18 +158,49 @@ public class DownloadsView extends View {
 	        label.setIcon(null);
 	        label.setText(value != null ? value.toString() : "");
 	    }
-	      
+
+	    label.setToolTipText(value.toString());
+//        int modelColumn = table.convertColumnIndexToModel(column);
+//        if (modelColumn == 2 || modelColumn == 3) {
+//            label.setToolTipText(value.toString());
+//        } else {
+//            label.setToolTipText(null);
+//        }
+	    
 	    return label;
 	  }
 	  });
 	}
 	
+	  private JTable createTable() {
+		  JTable table = new JTable(tableModel) {
+			  
+		    @Override
+		    public String getToolTipText(java.awt.event.MouseEvent e) {
+		        java.awt.Point p = e.getPoint();
+		        int rowIndex = rowAtPoint(p);
+		        int colIndex = columnAtPoint(p);
+	
+		        rowIndex = convertRowIndexToModel(rowIndex);
+		        colIndex = convertColumnIndexToModel(colIndex);
+	
+		        if (rowIndex < 0 || colIndex < 0) return null;
+	
+		        if (colIndex == 2 || colIndex == 3) {
+		            Object value = getModel().getValueAt(rowIndex, colIndex);
+		            return value != null ? value.toString() : null;
+		        }
+		        return null;
+		    }
+		  };
+		  return table;
+	  }
   
-	private void configureFilter(SearchBar searchBar, TableRowSorter<DefaultTableModel> sorter) {
+	private void configureSorter(SearchBar searchBar, TableRowSorter<DefaultTableModel> sorter) {
 
 		searchBar.setOnEnterAction(text -> {
 		
-		if (text == null || text.isBlank() || text.equals("Search your video by its title/author")) {
+		if (text == null || text.isBlank() || text.equals(searchBar.getPlaceholder())) {
 			sorter.setRowFilter(null);
 			return;
 		}
@@ -190,24 +227,26 @@ public class DownloadsView extends View {
 	    };
 	}
 
-
-
 	
-  private void loadVideosFromDatabase() {
-    videos.clear();
-    try {
-      VideoDAO dao = new VideoDAO();
-      videos.addAll(dao.findAll());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+	  private void loadVideosFromDatabase() {
+		  videos.clear();
+		  try {
+			  VideoDAO dao = new VideoDAO();
+			  videos.addAll(dao.findAll());
+		  } catch (Exception e) {
+			  e.printStackTrace();
+		  }
+	  }
 
-  public void refreshTable() {
-    loadVideosFromDatabase();
-    tableModel.setRowCount(0);
-    for (Video v : videos) {
-      tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), (v.getFileSize() > 0 ? (v.getFileSize() / (1024 * 1024)) + "MB" : "")});
-    }
-  }
+  
+	  public void refreshTable() {
+		  
+		  loadVideosFromDatabase();
+		  tableModel.setRowCount(0);
+		  
+		  for (Video v : videos) {
+			  tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), (v.getFileSize() > 0 ? (v.getFileSize() / (1024 * 1024)) + "MB" : "")});
+		  }
+	  }
+	  
 }

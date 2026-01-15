@@ -63,6 +63,11 @@ public class SearchBar extends JPanel {
 		});
 	}
 	
+	public String getPlaceholder() {
+		return placeholder;
+	}
+
+
 	public JTextField getTextContainer() {
 		return txtContainer;
 	}
