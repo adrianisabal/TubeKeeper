@@ -71,9 +71,6 @@ public class DownloadsView extends View {
 
 		gbc.gridx = 1;
  		gbc.anchor = GridBagConstraints.EAST;
- 		
-		String[] sortOptions = { "Most Recent", "Oldest", "Title A-Z", "Title Z-A", "Logest Duration", "Shortest Duration"};
-		getHeaderPanel().add(new JComboBox<String>(sortOptions), gbc);
 
 	}
 	
