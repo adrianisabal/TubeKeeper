@@ -32,7 +32,9 @@ import db.VideoDAO;
 public class PlaylistView extends View {
 	
   private Playlist playlist;
-	
+  private DefaultTableModel playlistDataModel; 
+  private JTable playlistTable;
+  
   public PlaylistView(Playlist playlist) {
 	    super(ViewType.SUB_VIEW, playlist.getTitle());
     
@@ -54,8 +56,8 @@ public class PlaylistView extends View {
 	        ((MainFrame) w).showScreen(MainFrame.VIEW_PLAYLISTS);
 	      }
 	    });
-	    
-      DefaultTableModel playlistDataModel = new DefaultTableModel(new Vector<>(), new Vector<String>(Arrays.asList("#", "Thumbnail", "Title", "Author"))) 
+	    Vector<String> headers = new Vector<>(Arrays.asList("#", "Thumbnail", "Title", "Author", "VIDEO_HIDDEN"));  
+      this.playlistDataModel = new DefaultTableModel(new Vector<>(), new Vector<String>(Arrays.asList("#", "Thumbnail", "Title", "Author"))) 
       {
 
 		    @Override
@@ -73,13 +75,20 @@ public class PlaylistView extends View {
 	  
       playlistTable.setFont(DefaultButton.DEFAULT_FONT);
       playlistTable.getTableHeader().setFont(DefaultButton.DEFAULT_FONT.deriveFont(Font.BOLD));
+      
       playlistTable.setRowHeight(80);
       playlistTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+      
+      playlistTable.getColumnModel().getColumn(4).setMinWidth(0);
+      playlistTable.getColumnModel().getColumn(4).setMaxWidth(0);
+      playlistTable.getColumnModel().getColumn(4).setPreferredWidth(0);
+      
       DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-	centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
-	for (int i = 0; i < playlistTable.getColumnCount(); i++) {
-		playlistTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-	}
+      centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
+	
+		for (int i = 0; i < playlistTable.getColumnCount(); i++) {
+			playlistTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
 
       playlistTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
         
@@ -125,18 +134,35 @@ public class PlaylistView extends View {
       plPanel.add(textPanel, BorderLayout.SOUTH);
 
       JScrollPane tableContainer = new JScrollPane(playlistTable);
-
       add(plPanel, BorderLayout.WEST);
-	    add(tableContainer, BorderLayout.CENTER);
+      add(tableContainer, BorderLayout.CENTER);
+      
+      refreshTable();
 	}
 
-  private List<Video> loadVideosFromDatabase(int playlistId) {
-    try {
-      VideoDAO dao = new VideoDAO();
-      return dao.findByPlaylistId(playlistId);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return java.util.Collections.emptyList();
-    }
-  }
+	  public void refreshTable() {
+	      playlistDataModel.setRowCount(0);
+	
+	      List<Video> videos = loadVideosFromDatabase(this.playlist.getDbId());
+	      
+	      for (Video v : videos) {
+	          playlistDataModel.addRow(new Object[]{
+	              videos.indexOf(v) + 1, 
+	              v.getThumbnail(), 
+	              v.getTitle(), 
+	              v.getAuthor(),
+	              v 
+	          }); 
+	      }
+	  }
+	      
+	  private List<Video> loadVideosFromDatabase(int playlistId) {
+	    try {
+	      VideoDAO dao = new VideoDAO();
+	      return dao.findByPlaylistId(playlistId);
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      return java.util.Collections.emptyList();
+	    }
+	  }
 }
