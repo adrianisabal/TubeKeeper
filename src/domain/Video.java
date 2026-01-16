@@ -1,12 +1,16 @@
 package domain;
 
 import javax.swing.ImageIcon;
+
+import java.awt.Desktop;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.felipeucelli.javatube.Youtube;
+
 import com.github.felipeucelli.javatube.Stream;
 import org.json.JSONArray;
 
@@ -192,4 +196,39 @@ public class Video {
   public ImageIcon getThumbnail() {
     return thumbnail;
   }
+  
+  public String formatDuration(Integer totalSeconds) {
+      if (totalSeconds == null || totalSeconds == 0) return "00:00";
+      
+      long hours = totalSeconds / 3600;
+      long minutes = (totalSeconds % 3600) / 60;
+      long seconds = totalSeconds % 60;
+
+      if (hours > 0) {
+          return String.format("%d:%02d:%02d", hours, minutes, seconds);
+      } else {
+          return String.format("%02d:%02d", minutes, seconds);
+      }
+  }
+
+  public String formatViews(Long views) {
+      if (views == null) return "0";
+      if (views < 1000) return String.valueOf(views);
+      
+      int exp = (int) (Math.log(views) / Math.log(1000));
+      String pre = "kMGTPE".charAt(exp - 1) + "";
+      return String.format("%.1f%s", views / Math.pow(1000, exp), pre);
+  }
+
+  public String formatSize(long bytes) {
+      if (bytes <= 0) return "Desconocido";
+      String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+      int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
+      if (digitGroups < 0) digitGroups = 0;
+      if (digitGroups >= units.length) digitGroups = units.length - 1;
+      
+      return new DecimalFormat("#,##0.##").format(bytes / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+  }
+  
+
 }
