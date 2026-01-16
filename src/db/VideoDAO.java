@@ -65,53 +65,81 @@ public class VideoDAO {
   }
 
   public List<Video> findByPlaylistId(int playlistId) throws SQLException {
-    List<Video> result = new ArrayList<>();
+	    List<Video> result = new ArrayList<>();
+	    String sql = "SELECT * FROM video WHERE playlist_id = ?";
 
-    String sql = "SELECT title, author, thumbnail_url, file_size FROM video WHERE playlist_id = ?";
+	    try (Connection con = DatabaseManager.getConnection();
+	         PreparedStatement pstmt = con.prepareStatement(sql)) {
 
-    try (Connection con = DatabaseManager.getConnection();
-         PreparedStatement pstmt = con.prepareStatement(sql)) {
+	        pstmt.setInt(1, playlistId);
 
-      pstmt.setInt(1, playlistId);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                int dbID = rs.getInt("id");
+	                String title = rs.getString("title");
+	                String author = rs.getString("author");
+	                String description = rs.getString("description");
+	                String publishDate = rs.getString("publish_date");
+	                int length = rs.getInt("length_seconds");
+	                String thumbUrl = rs.getString("thumbnail_url");
+	                Long views = rs.getLong("views");
+	                String url = rs.getString("url");
+	                long size = rs.getLong("file_size");
+	                String youtubeID = rs.getString("youtube_id");
 
-      try (ResultSet rs = pstmt.executeQuery()) {
-        while (rs.next()) {
-          String title = rs.getString("title");
-          String author = rs.getString("author");
-          String thumbUrl = rs.getString("thumbnail_url");
-          long size = rs.getLong("file_size");
-          ImageIcon thumb = buildThumbnail(thumbUrl);
-          Video v = new Video(title, author, thumb, size);
-          result.add(v);
-        }
-      }
-    }
+	                ImageIcon thumb = buildThumbnail(thumbUrl);
 
-    return result;
-  }
+	                Video v = new Video(dbID, url, youtubeID, title, author, thumb);
+	                v.setFileSize(size);
+	                v.setPublishDate(publishDate);
+	                v.setLength(length);
+	                v.setViews(views);
+	                v.setDescription(description);
+
+	                result.add(v);
+	            }
+	        }
+	    }
+	    return result;
+	}
+
 
   public List<Video> findAll() throws SQLException {
-    List<Video> result = new ArrayList<>();
+	    List<Video> result = new ArrayList<>();
+	    String sql = "SELECT * FROM video"; 
 
-    String sql = "SELECT title, author, thumbnail_url, file_size FROM video";
+	    try (Connection con = DatabaseManager.getConnection();
+	         Statement stmt = con.createStatement();
+	         ResultSet rs = stmt.executeQuery(sql)) {
 
-    try (Connection con = DatabaseManager.getConnection();
-         Statement stmt = con.createStatement();
-         ResultSet rs = stmt.executeQuery(sql)) {
+	        while (rs.next()) {
+	            int dbID = rs.getInt("id");
+	            String title = rs.getString("title");
+	            String author = rs.getString("author");
+	            String description = rs.getString("description");
+	            String publishDate = rs.getString("publish_date");
+	            int length = rs.getInt("length_seconds");
+	            String thumbUrl = rs.getString("thumbnail_url");
+	            Long views = rs.getLong("views");
+	            String url = rs.getString("url");
+	            long size = rs.getLong("file_size");
+	            String youtubeID = rs.getString("youtube_id");
 
-      while (rs.next()) {
-        String title = rs.getString("title");
-        String author = rs.getString("author");
-        String thumbUrl = rs.getString("thumbnail_url");
-        long size = rs.getLong("file_size");
-        ImageIcon thumb = buildThumbnail(thumbUrl);
-        Video v = new Video(title, author, thumb, size);
-        result.add(v);
-      }
-    }
+	            ImageIcon thumb = buildThumbnail(thumbUrl);
 
-    return result;
-  }
+	            Video v = new Video(dbID, url, youtubeID, title, author, thumb);
+	            v.setFileSize(size);
+	            v.setPublishDate(publishDate);
+	            v.setLength(length);
+	            v.setViews(views);
+	            v.setDescription(description);
+
+	            result.add(v);
+	        }
+	    }
+	    return result;
+	}
+
 
   public void updateTitle(int id, String newTitle) throws SQLException {
     String sql = "UPDATE video SET title = ? WHERE id = ?";
