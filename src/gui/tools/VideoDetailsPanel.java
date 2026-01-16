@@ -1,10 +1,14 @@
 package gui.tools;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
@@ -32,6 +36,7 @@ public class VideoDetailsPanel extends JPanel {
 	private JButton btnDelete;
 	
 	private Video currentVideo;
+	private String currentVideoUrl = "";
 
     public VideoDetailsPanel() {
     	setLayout(new BorderLayout());
@@ -49,7 +54,7 @@ public class VideoDetailsPanel extends JPanel {
         
         btnDelete = new DefaultButton("Delete Video");
 
-        btnDelete.setFont(new Font("SansSerif", Font.BOLD, 12));
+        btnDelete.setFont(new Font("SansSerif", Font.BOLD, 16));
         btnDelete.setOpaque(false);
         btnDelete.setMaximumSize(new Dimension(200, 30));
         btnDelete.setAlignmentX(CENTER_ALIGNMENT);
@@ -80,22 +85,56 @@ public class VideoDetailsPanel extends JPanel {
         detailsTable.setRowSelectionAllowed(false);
         detailsTable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 
-        TableColumn propColumn = detailsTable.getColumnModel().getColumn(0);
-        propColumn.setPreferredWidth(130);
-        propColumn.setMaxWidth(130);
-        propColumn.setMinWidth(80);
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        propColumn.setCellRenderer(centerRenderer);
-
+        configureRenderer();
         detailsTable.getTableHeader().setVisible(false);
+        configureLinkListener();
 
         JScrollPane scrollPane = new JScrollPane(detailsTable);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         add(scrollPane, BorderLayout.CENTER);
 
+    }
+    
+    private void configureRenderer() {
+        TableColumn col0 = detailsTable.getColumnModel().getColumn(0);
+        col0.setPreferredWidth(130);
+        col0.setMaxWidth(130);
+        col0.setMinWidth(80);
+     
+        Color colorPar = new Color(245, 245, 245);
+        Color colorImpar = new Color(240, 240, 240); 
+
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                if (!isSelected) {
+                	if (row % 2 == 0) { 
+                		c.setBackground(colorPar);
+                	} else {
+                		c.setBackground(colorImpar);
+            		}
+                } 
+                if (column == 0) {
+                setHorizontalAlignment(SwingConstants.CENTER);
+                } else {
+                	setHorizontalAlignment(SwingConstants.LEFT);
+                }
+                
+                setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+
+                return c;
+            }
+        };
+
+        col0.setCellRenderer(renderer);
+        detailsTable.getColumnModel().getColumn(1).setCellRenderer(renderer);
+        detailsTable.setIntercellSpacing(new Dimension(0, 0)); 
     }
     
     public void addDeleteButtonListener(ActionListener listener) {
@@ -118,6 +157,7 @@ public class VideoDetailsPanel extends JPanel {
         }
         
         btnDelete.setVisible(true);
+        currentVideoUrl = video.getUrl();
 
     try {
         ImageIcon resized = ImageUtils.resizeImageIcon(video.getThumbnail(), 200, 200);
@@ -129,16 +169,58 @@ public class VideoDetailsPanel extends JPanel {
     }
 
     tableModel.setRowCount(0);
-    tableModel.addRow(new Object[]{"Title", video.getTitle()});
-    tableModel.addRow(new Object[]{"Author", video.getAuthor()});
+
+    String durationStr = video.formatDuration(video.length()); 
+    String sizeStr = video.formatSize(video.getFileSize());
+    String viewsStr = video.formatViews(video.getViews());
     
-    String sizeStr = video.getFileSize() > 0 
-    		? String.format("%.2f MB", video.getFileSize() / (1024.0 * 1024.0)) 
-    		: "Unknown";
-    tableModel.addRow(new Object[]{"Size", sizeStr});
+    String titleDisplay = "<html><font color='blue'><u>" + video.getTitle() + "</u></font></html>"; // ChatGPT Generated Line
+    
+    tableModel.addRow(new Object[]{"Title", titleDisplay});
     tableModel.addRow(new Object[]{"Author", video.getAuthor()});
+    tableModel.addRow(new Object[]{"Published", video.getPublishDate()});
+    tableModel.addRow(new Object[]{"Duration", durationStr});
+    tableModel.addRow(new Object[]{"Views", viewsStr});
+    tableModel.addRow(new Object[]{"Size", sizeStr});
     }
     
+    
+    private void configureLinkListener() {
+    	detailsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = detailsTable.rowAtPoint(e.getPoint());
+                int col = detailsTable.columnAtPoint(e.getPoint());
+                
+                if (row == 0 && col == 1 && !currentVideoUrl.isEmpty()) {
+                    openWebpage(currentVideoUrl);
+                }
+            }
+            
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int row = detailsTable.rowAtPoint(e.getPoint());
+                int col = detailsTable.columnAtPoint(e.getPoint());
+                
+                if (row == 0 && col == 1) {
+                    detailsTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                } else {
+                    detailsTable.setCursor(Cursor.getDefaultCursor());
+                }
+            }
+        });
+    }
 
-
+    //CHAT-GTP GENERATED
+    private void openWebpage(String urlString) {
+        try {
+            if (urlString != null && !urlString.isEmpty()) {
+                Desktop.getDesktop().browse(new java.net.URI(urlString));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error Video Link could be opened: " + e.getMessage());
+        }
+    }
+    // END CHAT-GTP GENERATED
 }

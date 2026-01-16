@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import com.github.felipeucelli.javatube.Youtube;
 
+
 import com.github.felipeucelli.javatube.Stream;
 import org.json.JSONArray;
 
@@ -221,7 +222,7 @@ public class Video {
   }
 
   public String formatSize(long bytes) {
-      if (bytes <= 0) return "Desconocido";
+      if (bytes <= 0) return "Unknown";
       String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
       int digitGroups = (int) (Math.log10(bytes) / Math.log10(1024));
       if (digitGroups < 0) digitGroups = 0;
