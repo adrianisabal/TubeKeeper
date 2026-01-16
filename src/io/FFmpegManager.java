@@ -23,8 +23,9 @@ import javax.swing.SwingUtilities;
 
 public class FFmpegManager {
 
-  private static final String download_URL = isWindows() ? "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip":
-                                                  "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz";
+  private static final String download_URL = isWindows() ? "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip" :
+                                             isMac() ? "https://evermeet.cx/ffmpeg/ffmpeg-8.0.1.zip":
+                                             "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz";
   private static final String INSTALL_DIR = System.getProperty("user.dir") + File.separator + "lib" + File.separator + "ffmpeg";
   private static final String FFMPEG = "ffmpeg" + (isWindows() ? ".exe" : "");
   private static String archiveName = "";
@@ -91,6 +92,10 @@ public class FFmpegManager {
      return System.getProperty("os.name").toLowerCase().contains("win");
   }
 
+  private static boolean isMac() {
+     return System.getProperty("os.name").toLowerCase().contains("mac");
+  }
+
   public static boolean isFFmpegInstalled() {
     try {
        if (isSuccessfulCommand(new ProcessBuilder(FFMPEG, "-version"))) {
@@ -153,7 +158,11 @@ public class FFmpegManager {
       if (isWindows()) {
         unzip();
       } else {
-        untarxz();
+        if (isMac()) {
+          unzip();
+        } else {
+          untarxz();
+        }
         setExPermission();
       }
       Files.deleteIfExists(Paths.get(INSTALL_DIR + File.separator + archiveName));
@@ -229,7 +238,8 @@ public class FFmpegManager {
             }
 
             Files.copy(zipIn, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
-            if (entry.getName().contains("ffmpeg.exe")) {
+            String entryFileName = new File(entry.getName()).getName();
+            if (entryFileName.equals((isMac()) ? "ffmpeg" :"ffmpeg.exe")) {
               ffmpegPath = new File(filePath).getAbsolutePath();
             }
           } else {
@@ -277,6 +287,14 @@ public class FFmpegManager {
       ProcessBuilder processBuilder = new ProcessBuilder("chmod", "+x", ffmpegPath);
       Process p = processBuilder.start();
       p.waitFor();
+
+      if (isMac()) {
+        try {
+          ProcessBuilder pbMac = new ProcessBuilder("xattr", "-d", "com.apple.quarantine", ffmpegPath);
+          Process pMac = pbMac.start();
+          pMac.waitFor();
+        } catch (Exception e) {}
+      }
     } catch (Exception e) {
       SwingUtilities.invokeLater(() -> 
         JOptionPane.showMessageDialog(currentPanel, 

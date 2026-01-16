@@ -123,12 +123,14 @@ public class DownloadManager {
 	        return video;
 	        
         } catch (Exception e) {
+          e.printStackTrace();
             throw new RuntimeException("Failed to download video: " + url, e); 		
         } 
     }
     
     private Playlist downloadPlaylist(String url) {
     	try {
+        TubeUtils.downloadPlaylist(url, downloadsPanel);
     	com.github.felipeucelli.javatube.Playlist apiPlaylist = new com.github.felipeucelli.javatube.Playlist(url);
         Playlist playlist = new Playlist(apiPlaylist);
         

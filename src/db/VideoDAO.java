@@ -3,7 +3,8 @@ package db;
 import domain.Video;
 
 import javax.swing.ImageIcon;
-import java.net.URL;
+
+import java.net.URI;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class VideoDAO {
       return logo;
     }
     try {
-      ImageIcon fromUrl = new ImageIcon(new URL(thumbUrl));
+      ImageIcon fromUrl = new ImageIcon(new URI(thumbUrl).toURL());
       if (fromUrl.getIconWidth() > 0 && fromUrl.getIconHeight() > 0) {
         return fromUrl;
       } else {

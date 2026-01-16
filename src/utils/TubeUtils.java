@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.JPanel;
 
+import com.github.felipeucelli.javatube.Playlist;
 import com.github.felipeucelli.javatube.Youtube;
 
 import io.ConfigManager;
@@ -25,7 +26,7 @@ public class TubeUtils {
       Youtube yt = new Youtube(videoLink);
 
       if (cfg.getFileType().equals("mp3")) {
-        Files.deleteIfExists(Paths.get(downloadPath + File.separator +  yt.getTitle() + ".mp3"));
+        Files.deleteIfExists(Paths.get(downloadPath + File.separator + yt.getTitle() + ".mp3"));
         String tmpName = downloadPath + File.separator + "audio" + timeStamp + ".mp4";
         yt.streams().getOnlyAudio().download(downloadPath, "audio" + timeStamp);
         ProcessBuilder pb = new ProcessBuilder(FFmpegManager.getFFmpegPath(), "-i", tmpName,
@@ -59,10 +60,37 @@ public class TubeUtils {
         }
       }
     } catch (Exception e) {
+      SwingUtilities.invokeLater(() -> 
+          JOptionPane.showMessageDialog(currentPanel,
+            "An error ocurred during playlist download.",
+            "Error: Could not download playlist",
+            JOptionPane.ERROR_MESSAGE)
+      );
+      throw e;
+    }
+  }
+
+  public static void downloadPlaylist(String plLink, JPanel currentPanel) throws Exception {
+    ConfigManager cfg = new ConfigManager();
+    String defaultDownloadPath = cfg.getDownloadPath() + File.separator;
+    cfg.save();
+    try { 
+      Playlist pl = new Playlist(plLink);
+      String downloadPath = defaultDownloadPath + pl.getTitle() + File.separator;
+      new File(downloadPath).mkdirs();
+      cfg.setDownloadPath(downloadPath);
+      for(String videoLink : pl.getVideos()){
+        downloadVideo(videoLink, currentPanel); 
+      }
+      cfg.setDownloadPath(defaultDownloadPath);
+      cfg.save();
+    } catch (Exception e) {
+      cfg.setDownloadPath(defaultDownloadPath);
+      cfg.save();
       e.printStackTrace();
       SwingUtilities.invokeLater(() -> 
           JOptionPane.showMessageDialog(currentPanel,
-            "An error ocurred during video download.\n" +
+            "An error ocurred during playlist download.\n" +
             "Please check your internet connection, \n" +
             "read/write access of TubeKeeper's download folder\n" +
             "and disk space left, then try again.",
@@ -87,5 +115,4 @@ public class TubeUtils {
       return;
     }
   }
-
 }
