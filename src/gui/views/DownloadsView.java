@@ -56,6 +56,7 @@ public class DownloadsView extends View {
 		
 		this.detailsPanel = new VideoDetailsPanel();
 		this.detailsPanel.setPreferredSize(new Dimension(500, 250));
+		configureDelete();
 		add(detailsPanel, BorderLayout.SOUTH);
 		
 		tableContainer.setBorder(null);
@@ -115,6 +116,29 @@ public class DownloadsView extends View {
 		});
 		
 		setRenderer();
+	}
+	
+	private void configureDelete() {
+		this.detailsPanel.addDeleteButtonListener(e -> {
+		    
+		    Video videoToDelete = detailsPanel.getCurrentVideo();
+
+		    if (videoToDelete != null) {
+		        int response = javax.swing.JOptionPane.showConfirmDialog(
+		            this, 
+		            "¿Delete " + videoToDelete.getTitle() + "?",
+		            "Confirm",
+		            javax.swing.JOptionPane.YES_NO_OPTION
+		        );
+
+		        if (response == javax.swing.JOptionPane.YES_OPTION) {
+		            // Llamar al DAO, borrar y refrescar...
+		            // deleteVideo(videoToDelete);
+		            refreshTable();
+		            detailsPanel.updateVideoDetails(null);
+		        }
+		    }
+		});
 	}
 	
 	private void setRenderer() {
