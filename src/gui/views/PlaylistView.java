@@ -57,7 +57,7 @@ public class PlaylistView extends View {
 	      }
 	    });
 	    Vector<String> headers = new Vector<>(Arrays.asList("#", "Thumbnail", "Title", "Author", "VIDEO_HIDDEN"));  
-      this.playlistDataModel = new DefaultTableModel(new Vector<>(), new Vector<String>(Arrays.asList("#", "Thumbnail", "Title", "Author"))) 
+      this.playlistDataModel = new DefaultTableModel(new Vector<>(), headers) 
       {
 
 		    @Override
