@@ -9,6 +9,8 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
 import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
@@ -200,15 +202,53 @@ public class VideoDetailsPanel extends JPanel {
     }
 
     //CHAT-GTP GENERATED
+
     private void openWebpage(String urlString) {
         try {
-            if (urlString != null && !urlString.isEmpty()) {
-                Desktop.getDesktop().browse(new java.net.URI(urlString));
+            if (Desktop.isDesktopSupported() &&
+                Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(urlString));
+                return;
             }
         } catch (Exception e) {
+            System.err.println("Desktop API failed, switching to ProcessBuilder...");
+        }
+
+        String os = System.getProperty("os.name").toLowerCase();
+
+        try {
+            ProcessBuilder builder = null;
+
+            if (os.contains("win")) {
+                builder = new ProcessBuilder(
+                        "rundll32", "url.dll,FileProtocolHandler", urlString);
+            } else if (os.contains("mac")) {
+                builder = new ProcessBuilder("open", urlString);
+            } else if (os.contains("nix") || os.contains("nux")) {
+                String[] browsers = {
+                        "xdg-open", "google-chrome", "firefox", "mozilla"
+                };
+
+                for (String browser : browsers) {
+                    try {
+                        new ProcessBuilder(browser, urlString).start();
+                        return;
+                    } catch (IOException ignored) {}
+                }
+            }
+
+            if (builder != null) {
+                builder.start();
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error Video Link could be opened: " + e.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Could not open browser.\nError: " + e.getMessage()
+            );
         }
     }
+
     // END CHAT-GTP GENERATED
 }
