@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
@@ -139,6 +140,8 @@ public class DownloadsView extends View {
 
 		        if (response == javax.swing.JOptionPane.YES_OPTION) {
 		            try {
+		            	if (deletePhysicalFile(videoToDelete) == false) return;
+		            	
 		                VideoDAO dao = new VideoDAO();
 		                dao.delete(videoToDelete.getDbID()); 
 		                
@@ -162,7 +165,54 @@ public class DownloadsView extends View {
 		});
 	}
 	
-	
+	private boolean deletePhysicalFile(Video video) {
+	    try {
+	        String downloadPath = loadDownloadPath();
+	        if (downloadPath == null) return false;
+
+	        String title = video.getTitle();
+	        
+	        String pathMp4 = downloadPath + File.separator + title + ".mp4";
+	        String pathMp3 = downloadPath + File.separator + title + ".mp3";
+
+	        File fileMp4 = new File(pathMp4);
+	        File fileMp3 = new File(pathMp3);
+
+	        boolean deleted = false;
+
+	        if (fileMp4.exists()) {
+	            deleted = fileMp4.delete();
+	            System.out.println("MP4 deleted: " + deleted);
+	        }
+
+	        if (fileMp3.exists()) {
+	            deleted = fileMp3.delete();
+	            System.out.println("MP3 deleted: " + deleted);
+	        }
+
+	        if (!deleted) {
+	            System.out.println("Physical file not found to delete: " + title);
+	        }
+	        
+	        return deleted;
+
+	    } catch (Exception e) {
+	        System.err.println("Error deleting file: " + e.getMessage());
+	        return false;
+	    }
+	}
+
+	private String loadDownloadPath() {
+	    try {
+	        java.util.Properties props = new java.util.Properties();
+	        System.out.println(1);
+	        props.load(new java.io.FileInputStream("conf/config.properties"));
+	        return props.getProperty("downloadPath");
+	    } catch (Exception e) {
+	        return null;
+	    }
+	}
+
 	private void setRenderer() {
 	    
 	    DefaultTableCellRenderer textRenderer = new DefaultTableCellRenderer() {
