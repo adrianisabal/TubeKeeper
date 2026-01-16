@@ -120,38 +120,48 @@ public class DownloadsView extends View {
 	
 	private void configureDelete() {
 		this.detailsPanel.addDeleteButtonListener(e -> {
+			
+            int viewRow = downloadsTable.getSelectedRow();
+            
+            if (viewRow == -1) {
+                return; 
+            }
 		    
 		    Video videoToDelete = detailsPanel.getCurrentVideo();
 
 		    if (videoToDelete != null) {
 		        int response = javax.swing.JOptionPane.showConfirmDialog(
 		            this, 
-		            "¿Delete " + videoToDelete.getTitle() + "?",
-		            "Confirm",
+		            "Are you sure you want to delete '" + videoToDelete.getTitle() + "'?",
+		            "Confirm Deletion",
 		            javax.swing.JOptionPane.YES_NO_OPTION
 		        );
 
 		        if (response == javax.swing.JOptionPane.YES_OPTION) {
-		            // Llamar al DAO, borrar y refrescar...
-		            // deleteVideo(videoToDelete);
-		            refreshTable();
-		            detailsPanel.updateVideoDetails(null);
+		            try {
+		                VideoDAO dao = new VideoDAO();
+		                dao.delete(videoToDelete.getDbID()); 
+		                
+		                videos.remove(videoToDelete);
+
+		                int modelRow = downloadsTable.convertRowIndexToModel(viewRow);
+		                downloadsTable.clearSelection();
+		                tableModel.removeRow(modelRow);
+		                
+		                detailsPanel.updateVideoDetails(null);
+
+		        	    downloadsTable.revalidate(); 
+		        	    downloadsTable.repaint();
+		            
+		            } catch (Exception ex) {
+		                ex.printStackTrace();
+		                javax.swing.JOptionPane.showMessageDialog(this, "Error deleting video: " + ex.getMessage());
+		            }
 		        }
 		    }
 		});
 	}
 	
-	private void setRendererr() {
-		
-	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-	centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
-	centerRenderer.setOpaque(true);
-	for (int i = 1; i < downloadsTable.getColumnCount(); i++) {
-		downloadsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-	}
-	  
-
-	}
 	
 	private void setRenderer() {
 	    
@@ -164,8 +174,6 @@ public class DownloadsView extends View {
 
 	            Component c = super.getTableCellRendererComponent(
 	                    table, value, isSelected, hasFocus, row, column);
-
-	            int modelColumn = table.convertColumnIndexToModel(column);
 
 	            setHorizontalAlignment(SwingConstants.CENTER);
 	            if (column == 2 || column == 3) {
@@ -258,6 +266,8 @@ public class DownloadsView extends View {
 		}
 		
 		sorter.setRowFilter(createFilter(text));
+	    downloadsTable.revalidate(); 
+	    downloadsTable.repaint();
 		});
 		}
 	
@@ -297,15 +307,15 @@ public class DownloadsView extends View {
 		  tableModel.setRowCount(0);
 		  
 		  for (Video v : videos) {
-			  String sizeString;
-		      if (v.getFileSize() > 0) {
-		           double sizeInMb = v.getFileSize() / (1024.0 * 1024.0);
-		           sizeString = String.format("%.2f MB", sizeInMb);
-		      } else {
-		           sizeString = "0 MB";
-		      }
-			  tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), sizeString});
+		      String sizeStr = v.formatSize(v.getFileSize());
+			  tableModel.addRow(new Object[]{v, v.getThumbnail(), v.getTitle(), v.getAuthor(), sizeStr});
 		  }
+		  if (sorter != null) {
+		        sorter.modelStructureChanged(); 
+		    }
+
+	    downloadsTable.revalidate(); 
+	    downloadsTable.repaint();
 	  }
 	  
 }

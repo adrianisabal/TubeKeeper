@@ -16,8 +16,8 @@ import com.github.felipeucelli.javatube.Stream;
 import org.json.JSONArray;
 
 public class Video {
-
   private String id;
+  private int dbID;
   private String title;
   private String description;
   private String author;
@@ -51,15 +51,51 @@ public class Video {
 	  this.thumbnail = thumbnail;
   }
   
-  public Video(String title, String author, ImageIcon thumbnail, long fileSize) {
-    this.title = title;
-    this.author = author;
-    this.thumbnail = thumbnail;
-    this.fileSize = fileSize;
+  public Video(int dbID, String url, String youtubeID, String title, String author, ImageIcon thumbnail) {
+	  this.dbID = dbID;
+	  this.url = url;
+	  this.id = youtubeID;
+	  this.title = title;
+	  this.author = author;
+	  this.thumbnail = thumbnail;
+	  
   }
+ 
+
+  public int getDbID() {
+	return dbID;
+}
+
+  public void setDescription(String description) {
+	this.description = description;
+}
 
   public Video(Youtube youtube, Stream stream) throws Exception {
     fillMetadata(youtube, stream);
+  }
+
+  public Integer getLength() {
+	return length;
+}
+
+  public void setLength(Integer length) {
+	this.length = length;
+  }
+
+  public void setPublishDate(String publishDate) {
+	this.publishDate = publishDate;
+  }
+
+  public void setViews(Long views) {
+	this.views = views;
+  }
+
+  public void setFileSize(long fileSize) {
+	this.fileSize = fileSize;
+  }
+
+  public void setThumbnail(ImageIcon thumbnail) {
+	this.thumbnail = thumbnail;
   }
 
   public Video(Youtube youtube) throws Exception {
