@@ -54,9 +54,9 @@ public class VideoDetailsPanel extends JPanel {
         
         btnDelete = new DefaultButton("Delete Video");
 
-        btnDelete.setFont(new Font("SansSerif", Font.BOLD, 16));
+        btnDelete.setFont(new Font("SansSerif", Font.BOLD, 12));
         btnDelete.setOpaque(false);
-        btnDelete.setMaximumSize(new Dimension(200, 30));
+        btnDelete.setMaximumSize(new Dimension(150, 25));
         btnDelete.setAlignmentX(CENTER_ALIGNMENT);
         btnDelete.setVisible(false);
         
@@ -196,19 +196,7 @@ public class VideoDetailsPanel extends JPanel {
                     openWebpage(currentVideoUrl);
                 }
             }
-            
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                int row = detailsTable.rowAtPoint(e.getPoint());
-                int col = detailsTable.columnAtPoint(e.getPoint());
-                
-                if (row == 0 && col == 1) {
-                    detailsTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                } else {
-                    detailsTable.setCursor(Cursor.getDefaultCursor());
-                }
-            }
-        });
+    	});
     }
 
     //CHAT-GTP GENERATED

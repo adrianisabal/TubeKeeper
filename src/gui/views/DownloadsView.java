@@ -141,7 +141,7 @@ public class DownloadsView extends View {
 		});
 	}
 	
-	private void setRenderer() {
+	private void setRendererr() {
 		
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
@@ -149,44 +149,80 @@ public class DownloadsView extends View {
 	for (int i = 1; i < downloadsTable.getColumnCount(); i++) {
 		downloadsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 	}
-	
-		
-	downloadsTable.setFont(DefaultButton.DEFAULT_FONT);
-	downloadsTable.getTableHeader().setFont(DefaultButton.DEFAULT_FONT.deriveFont(Font.BOLD));
-	downloadsTable.setRowHeight(80);
-	downloadsTable.getColumnModel().getColumn(1).setPreferredWidth(120);
-	downloadsTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
 	  
-	  @Override  
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-	    JLabel label = new JLabel();
-	    label.setBackground(table.getSelectionBackground());
-	    label.setForeground(table.getSelectionForeground());
-	    label.setOpaque(true);
-	    label.setHorizontalAlignment(JLabel.CENTER);
-	    label.setVerticalAlignment(JLabel.CENTER); 
-	
-	    if (isSelected) {
-	        label.setBackground(table.getSelectionBackground());
-	        label.setForeground(table.getForeground());
-	    } else {
-	        label.setBackground(table.getBackground());
-	        label.setForeground(table.getForeground());
-	    }
-	    
-	    if (value instanceof ImageIcon) {
-	        ImageIcon originalIcon = (ImageIcon) value;
-	        ImageIcon resizedIcon = ImageUtils.resizeImageIcon(originalIcon, 70, 70);
-	        label.setIcon(resizedIcon);
-	    } else {
-	        label.setIcon(null);
-	        label.setText(value != null ? value.toString() : "");
-	    }
-	    
-	    return label;
-	  }
-	  });
+
 	}
+	
+	private void setRenderer() {
+	    
+	    DefaultTableCellRenderer textRenderer = new DefaultTableCellRenderer() {
+	        @Override
+	        public Component getTableCellRendererComponent(
+	                JTable table, Object value,
+	                boolean isSelected, boolean hasFocus,
+	                int row, int column) {
+
+	            Component c = super.getTableCellRendererComponent(
+	                    table, value, isSelected, hasFocus, row, column);
+
+	            int modelColumn = table.convertColumnIndexToModel(column);
+
+	            setHorizontalAlignment(SwingConstants.CENTER);
+	            if (column == 2 || column == 3) {
+	                setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
+	            }
+
+	            return c;
+	        }
+	    };
+	    textRenderer.setOpaque(true);
+
+	    for (int i = 2; i <= 4; i++) {
+	        downloadsTable.getColumnModel().getColumn(i).setCellRenderer(textRenderer);
+	    }
+		
+		downloadsTable.setFont(DefaultButton.DEFAULT_FONT);
+		downloadsTable.getTableHeader().setFont(DefaultButton.DEFAULT_FONT.deriveFont(Font.BOLD));
+		downloadsTable.setRowHeight(75);
+		
+		int[] anchos = {130, 400, 200, 130};
+		for (int i = 0; i < anchos.length; i++) {
+		    downloadsTable.getColumnModel().getColumn(i + 1).setPreferredWidth(anchos[i]);
+		}
+
+	    downloadsTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {	
+		  @Override  
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			    JLabel label = new JLabel();
+			    label.setBackground(table.getSelectionBackground());
+			    label.setForeground(table.getSelectionForeground());
+			    label.setOpaque(true);
+			    label.setHorizontalAlignment(JLabel.CENTER);
+			    label.setVerticalAlignment(JLabel.CENTER); 
+			
+			    if (isSelected) {
+			        label.setBackground(table.getSelectionBackground());
+			        label.setForeground(table.getForeground());
+			    } else {
+			        label.setBackground(table.getBackground());
+			        label.setForeground(table.getForeground());
+			    }
+			    
+			    if (value instanceof ImageIcon) {
+			        ImageIcon originalIcon = (ImageIcon) value;
+			        ImageIcon resizedIcon = ImageUtils.resizeImageIcon(originalIcon, 70, 70);
+			        label.setIcon(resizedIcon);
+			    } else {
+			        label.setIcon(null);
+			        label.setText(value != null ? value.toString() : "");
+			    }
+			    
+			    return label;
+			  }
+			  });
+	 }
+
+	
 	
 	  private JTable createTable() {
 		  JTable table = new JTable(tableModel) {
