@@ -289,4 +289,8 @@ public class FFmpegManager {
       throw e;
     }  
   }
+
+  public static String getFFmpegPath() {
+    return ffmpegPath;
+  }
 }

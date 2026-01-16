@@ -44,15 +44,15 @@ import javax.swing.JFileChooser;
 
 public class SettingsView extends JFrame {
 
-  JCheckBox manualResCheck;
-  JSpinner horizontalRes;
-  JSpinner verticalRes;
-  JButton pathButton;
-  JComboBox<String> sortCombo;
-  JCheckBox historyCheck;
-  JCheckBox demoCheck;
-  JComboBox<String> fileTypeCombo;
-  JComboBox<String> policyCombo; 
+  private JCheckBox manualResCheck;
+  private JSpinner horizontalRes;
+  private JSpinner verticalRes;
+  private JButton pathButton;
+  private JComboBox<String> sortCombo;
+  private JCheckBox historyCheck;
+  private JCheckBox demoCheck;
+  private JComboBox<String> fileTypeCombo;
+  private JComboBox<String> policyCombo; 
 
   public SettingsView() {
     super();

@@ -12,7 +12,7 @@ import java.awt.Toolkit;
 
 public class ConfigManager {
 
-  private static final String CONFIG_DIR = "conf";
+  private static final String CONFIG_DIR = System.getProperty("user.dir") + File.separator + "conf";
   private static final String CONFIG_FILE = CONFIG_DIR + File.separator + "config.properties";
 
   private final Properties properties = new Properties();
@@ -51,7 +51,7 @@ public class ConfigManager {
     properties.setProperty("saveHistory", "true");
     properties.setProperty("demoMode", "true");
     properties.setProperty("fileType", "mp4");
-    properties.setProperty("policy", "Highest quality");
+    properties.setProperty("policy", FFmpegManager.isFFmpegInstalled() ? "Highest quality" : "Light (360p max, no FFmpeg)");
   }
 
   public void save() {
@@ -64,11 +64,8 @@ public class ConfigManager {
 
   private String getDefaultDownloadPath() {
     File homeDir = FileSystemView.getFileSystemView().getHomeDirectory();
-    File downloadsDir = new File(homeDir, "Downloads");
+    File downloadsDir = new File(homeDir + File.separator + "Downloads");
     if (!downloadsDir.exists() || !downloadsDir.isDirectory()) {
-        downloadsDir = new File(homeDir, "Downloads");
-    }
-    if (!downloadsDir.exists()) {
         downloadsDir.mkdirs();
     }
     return downloadsDir.getAbsolutePath().toString();

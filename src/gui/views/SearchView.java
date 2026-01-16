@@ -6,16 +6,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
-import com.github.felipeucelli.javatube.Youtube;
-
-import db.VideoDAO;
 import domain.DownloadManager;
-import domain.Video;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 
 import utils.ImageUtils;

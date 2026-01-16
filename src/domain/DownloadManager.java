@@ -10,6 +10,7 @@ import db.PlaylistDAO;
 import gui.tools.DownloadItemPanel;
 import gui.tools.DownloadsPanel;
 import utils.LinkType;
+import utils.TubeUtils;
 
 public class DownloadManager {
 	
@@ -107,6 +108,7 @@ public class DownloadManager {
     private Video downloadVideo(String url, Playlist playlist) {
         try {
 	    	Youtube yt = new Youtube(url);
+        TubeUtils.downloadVideo(url, downloadsPanel);
 	        Stream bestStream = yt.streams().getHighestResolution();
 	        Video video = new Video(yt, bestStream);
 
