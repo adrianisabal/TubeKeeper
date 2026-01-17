@@ -1,5 +1,8 @@
 package domain;
 
+import java.io.File;
+import java.util.function.BiConsumer;
+
 import javax.swing.SwingUtilities;
 
 import com.github.felipeucelli.javatube.Youtube;
@@ -50,16 +53,13 @@ public class DownloadManager {
                 switch (type) {
                     case VIDEO:
 
-                        Video video = downloadVideo(url, null);
-                        String vTitle = video.getTitle();
-                        itemPanel.setTitle(truncateTitle(vTitle), vTitle);
+                      Youtube ytMeta = new Youtube(url);
+                      String vTitleMeta = ytMeta.getTitle();
+                      itemPanel.setTitle(truncateTitle(vTitleMeta), vTitleMeta);
 
-                        for (int i = 0; i <= 100; i += 10) {
-                            itemPanel.setProgress(i);
-                            Thread.sleep(100);
-                        }
-                        break;
-
+                      Video video = downloadVideo(url, null, itemPanel);
+                      itemPanel.setProgress(100);
+                      break;
                     case PLAYLIST:
                         
                     	playlist = downloadPlaylist(url);
@@ -72,14 +72,14 @@ public class DownloadManager {
                         
                     case PLAYLIST_VIDEO:
                         if (playlist == null) throw new IllegalArgumentException("Playlist cannot be null");
-                        
-                    	video = downloadVideo(url, playlist);
-                        videoIndx++;
-                    	itemPanel.setProgress((int)(((videoIndx) / (double) playlist.getVideoUrls().size()) * 100));
-                        
-                        if (videoIndx < playlist.getVideoUrls().size()) downloadRec(playlist.getVideoUrls().get(videoIndx), LinkType.PLAYLIST_VIDEO, itemPanel, playlist, videoIndx);
-                        break;
-                                            	
+    
+                              video = downloadVideo(url, playlist, itemPanel);
+                              videoIndx++;
+                              itemPanel.setProgress((int)(((videoIndx) / (double) playlist.getVideoUrls().size()) * 100));
+    
+                              if (videoIndx < playlist.getVideoUrls().size())
+                                  downloadRec(playlist.getVideoUrls().get(videoIndx), LinkType.PLAYLIST_VIDEO, itemPanel, playlist, videoIndx);
+                        break;                                            	
                     default:
                     	tryUnknownLink(url, itemPanel);
                 }
@@ -107,32 +107,45 @@ public class DownloadManager {
         });
     }
     
-    private Video downloadVideo(String url, Playlist playlist) {
-        try {
-	    	  Youtube yt = new Youtube(url);
-          if (playlist == null) {
-              TubeUtils.downloadVideo(url, downloadsPanel);
-          }
-	        Stream bestStream = yt.streams().getHighestResolution();
-	        Video video = new Video(yt, bestStream);
-          ConfigManager cfg = new ConfigManager();
-          if (cfg.isSaveHistory()) {
-	          if (playlist != null) {
-	        	  playlist.getVideos().add(video);
-	          	videoDAO.insert(video, playlist.getDbId()); 
-	          } else {
-	        	  videoDAO.insert(video, null);
-	          }
-          }
-	        return video;
-	        
-        } catch (Exception e) {
-          e.printStackTrace();
-            throw new RuntimeException("Failed to download video: " + url, e); 		
-        } 
-    }
-    
-    private Playlist downloadPlaylist(String url) {
+  private Video downloadVideo(String url, Playlist playlist, DownloadItemPanel itemPanel) {
+    try {
+        Youtube yt = new Youtube(url);
+
+        if (playlist == null) {
+            ConfigManager cfg = new ConfigManager();
+            String downloadPath = cfg.getDownloadPath() + File.separator;
+
+            BiConsumer<Long, Long> progressCallback = (bytes, total) -> {
+                if (total > 0) {
+                    int percent = (int)((bytes * 100) / total);
+                    itemPanel.setProgress(percent);
+                }
+            };
+
+            TubeUtils.downloadVideo(url, downloadsPanel, downloadPath, progressCallback);
+        }
+
+        Stream bestStream = yt.streams().getHighestResolution();
+        Video video = new Video(yt, bestStream);
+
+        ConfigManager cfg2 = new ConfigManager();
+        if (cfg2.isSaveHistory()) {
+            if (playlist != null) {
+                playlist.getVideos().add(video);
+                videoDAO.insert(video, playlist.getDbId()); 
+            } else {
+                videoDAO.insert(video, null);
+            }
+        }
+        return video;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Failed to download video: " + url, e); 		
+    } 
+}   
+
+  private Playlist downloadPlaylist(String url) {
     	try {
         TubeUtils.downloadPlaylist(url, downloadsPanel);
     	  com.github.felipeucelli.javatube.Playlist apiPlaylist = new com.github.felipeucelli.javatube.Playlist(url);
