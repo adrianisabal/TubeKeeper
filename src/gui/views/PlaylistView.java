@@ -201,65 +201,51 @@ public class PlaylistView extends View {
 	    }
 	  }
 
-      private void openLocalFileFromPlaylist(Video video) {
-          try {
-              ConfigManager cfg = new ConfigManager();
-              String base = cfg.getDownloadPath();
-              if (base == null || base.isBlank()) {
-                  System.err.println("Download path not configured");
-                  return;
-              }
+	private void openLocalFileFromPlaylist(Video video) {
+	    try {
+	        ConfigManager cfg = new ConfigManager();
+	        String base = cfg.getDownloadPath();
+	        if (base == null || base.isBlank()) {
+	            System.err.println("Download path not configured");
+	            return;
+	        }
 
-              String playlistFolder = playlist.getTitle();
-              File playlistDir = new File(base + File.separator + playlistFolder);
-              
-              String safeTitle = TubeUtils.sanitizeFilename(video.getTitle());
-              File mp4 = new File(playlistDir, safeTitle + ".mp4");
-              File mp3 = new File(playlistDir, safeTitle + ".mp3");
+	        String playlistFolder = TubeUtils.sanitizeFilename(playlist.getTitle());
+	        File playlistDir = new File(base + File. separator + playlistFolder);
+	        
+	        String safeTitle = TubeUtils.sanitizeFilename(video. getTitle());
+	        File mp4 = new File(playlistDir, safeTitle + ".mp4");
+	        File mp3 = new File(playlistDir, safeTitle + ".mp3");
 
-              if (!mp4.exists() && !mp3.exists()) {
-                  mp4 = new File(base + File.separator + safeTitle + ".mp4");
-                  mp3 = new File(base + File.separator + safeTitle + ".mp3");
-              }
+	        if (!mp4.exists() && !mp3.exists()) {
+	            mp4 = new File(base + File.separator + safeTitle + ".mp4");
+	            mp3 = new File(base + File.separator + safeTitle + ".mp3");
+	        }
 
-              File target = null;
-              if (mp4.exists()) {
-                  target = mp4;
-              } else if (mp3.exists()) {
-                  target = mp3;
-              }
+	        File target = null;
+	        if (mp4.exists()) {
+	            target = mp4;
+	        } else if (mp3.exists()) {
+	            target = mp3;
+	        }
 
-              if (target == null) {
-                  System.err.println("Local file not found for video: " + video.getTitle());
-                  JOptionPane.showMessageDialog(this,
-                          "Local file not found:\n" + safeTitle + ".mp4 / .mp3",
-                          "File not found",
-                          JOptionPane.WARNING_MESSAGE);
-                  return;
-              }
-
-              if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-                  Desktop.getDesktop().open(target);
-                  return;
-              }
-
-              String os = System.getProperty("os.name").toLowerCase();
-              ProcessBuilder builder;
-              if (os.contains("win")) {
-                  builder = new ProcessBuilder("cmd", "/c", "start", "", target.getAbsolutePath());
-              } else if (os.contains("mac")) {
-                  builder = new ProcessBuilder("open", target.getAbsolutePath());
-              } else {
-                  builder = new ProcessBuilder("xdg-open", target.getAbsolutePath());
-              }
-              builder.start();
-
-          } catch (Exception e) {
-              System.err.println("Error opening local file from playlist: " + e.getMessage());
-              JOptionPane.showMessageDialog(this,
-                      "Could not open the video file.\n" + e.getMessage(),
-                      "Error",
-                      JOptionPane.ERROR_MESSAGE);
-          }
-      }
+	        if (target != null && target.exists()) {
+	            if (java.awt.Desktop.isDesktopSupported()) {
+	                java.awt.Desktop.getDesktop().open(target);
+	            }
+	        } else {
+	            JOptionPane.showMessageDialog(this,
+	                "Local file not found:\n" + safeTitle + ".mp4 / .mp3",
+	                "File not found",
+	                JOptionPane.WARNING_MESSAGE);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this,
+	            "Error opening file: " + e.getMessage(),
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE);
+	    }
+	}
 }
+

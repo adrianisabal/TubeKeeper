@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 import javax.swing.SwingUtilities;
 
 import com.github.felipeucelli.javatube.Youtube;
-import com.github.felipeucelli.javatube.Stream;
+import com.github.felipeucelli.javatube. Stream;
 
 import db.VideoDAO;
 import db.PlaylistDAO;
@@ -23,7 +23,6 @@ public class DownloadManager {
     private DownloadsPanel downloadsPanel;
     private VideoDAO videoDAO = new VideoDAO();
     private PlaylistDAO playlistDAO = new PlaylistDAO();
-
 
     public DownloadManager(DownloadsPanel downloadsPanel) {
         this.downloadsPanel = downloadsPanel;
@@ -51,7 +50,7 @@ public class DownloadManager {
     private void downloadRec(String url, LinkType type, DownloadItemPanel itemPanel, Playlist playlist, int videoIndx) {
         	try {
                 switch (type) {
-                    case VIDEO:
+                    case VIDEO: 
 
                       Youtube ytMeta = new Youtube(url);
                       String vTitleMeta = ytMeta.getTitle();
@@ -60,26 +59,19 @@ public class DownloadManager {
                       Video video = downloadVideo(url, null, itemPanel);
                       itemPanel.setProgress(100);
                       break;
-                    case PLAYLIST:
+
+                    case PLAYLIST: 
                         
-                    	playlist = downloadPlaylist(url);
+                    	playlist = downloadPlaylist(url, itemPanel);
                         String pTitle = playlist.getTitle();
                         itemPanel.setTitle(truncateTitle(pTitle), pTitle);
                         
-                    	downloadRec(playlist.getVideoUrls().get(0), LinkType.PLAYLIST_VIDEO, itemPanel, playlist, videoIndx);
+                        savePlaylistVideosToDatabase(playlist);
+                        
                     	playlist.setThumbnail();
                         break;
                         
-                    case PLAYLIST_VIDEO:
-                        if (playlist == null) throw new IllegalArgumentException("Playlist cannot be null");
-    
-                              video = downloadVideo(url, playlist, itemPanel);
-                              videoIndx++;
-                              itemPanel.setProgress((int)(((videoIndx) / (double) playlist.getVideoUrls().size()) * 100));
-    
-                              if (videoIndx < playlist.getVideoUrls().size())
-                                  downloadRec(playlist.getVideoUrls().get(videoIndx), LinkType.PLAYLIST_VIDEO, itemPanel, playlist, videoIndx);
-                        break;                                            	
+                        
                     default:
                     	tryUnknownLink(url, itemPanel);
                 }
@@ -110,6 +102,8 @@ public class DownloadManager {
   private Video downloadVideo(String url, Playlist playlist, DownloadItemPanel itemPanel) {
     try {
         Youtube yt = new Youtube(url);
+	String rawTitle = yt.getTitle();
+	String safeTitle = TubeUtils.sanitizeFilename(rawTitle);
 
         if (playlist == null) {
             ConfigManager cfg = new ConfigManager();
@@ -127,6 +121,7 @@ public class DownloadManager {
 
         Stream bestStream = yt.streams().getHighestResolution();
         Video video = new Video(yt, bestStream);
+	video.setTitle(safeTitle);	
 
         ConfigManager cfg2 = new ConfigManager();
         if (cfg2.isSaveHistory()) {
@@ -141,25 +136,50 @@ public class DownloadManager {
 
     } catch (Exception e) {
         e.printStackTrace();
-        throw new RuntimeException("Failed to download video: " + url, e); 		
+        throw new RuntimeException("Failed to download video:  " + url, e); 		
     } 
 }   
 
-  private Playlist downloadPlaylist(String url) {
+  private Playlist downloadPlaylist(String url, DownloadItemPanel itemPanel) {
     	try {
-        TubeUtils.downloadPlaylist(url, downloadsPanel);
-    	  com.github.felipeucelli.javatube.Playlist apiPlaylist = new com.github.felipeucelli.javatube.Playlist(url);
-        Playlist playlist = new Playlist(apiPlaylist);
-        ConfigManager cfg = new ConfigManager();
-        if (cfg.isSaveHistory()) {
-          int playlistId = playlistDAO.insert(playlist);
-          playlist.setDbId(playlistId);
-        }
-        return playlist;
-        
+            BiConsumer<Integer, Integer> playlistProgressCallback = (done, total) -> {
+                int percent = (int)((done * 100.0) / total);
+                itemPanel.setProgress(percent);
+            };
+
+            TubeUtils.downloadPlaylist(url, downloadsPanel, playlistProgressCallback);
+            
+    	    com.github.felipeucelli. javatube.Playlist apiPlaylist = new com.github. felipeucelli.javatube.Playlist(url);
+            Playlist playlist = new Playlist(apiPlaylist);
+            ConfigManager cfg = new ConfigManager();
+            if (cfg.isSaveHistory()) {
+              int playlistId = playlistDAO. insert(playlist);
+              playlist.setDbId(playlistId);
+            }
+            return playlist;
+            
         } catch (Exception e) {
             throw new RuntimeException("Failed to download playlist: " + url, e); 		
         } 
+    }
+
+    private void savePlaylistVideosToDatabase(Playlist playlist) {
+        ConfigManager cfg = new ConfigManager();
+        if (! cfg.isSaveHistory()) return;
+
+        new Thread(() -> {
+            try {
+                for (String videoUrl : playlist.getVideoUrls()) {
+                    Youtube yt = new Youtube(videoUrl);
+                    Stream bestStream = yt.streams().getHighestResolution();
+                    Video video = new Video(yt, bestStream);
+                    playlist.getVideos().add(video);
+                    videoDAO.insert(video, playlist.getDbId());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
     
     private void tryUnknownLink(String url, DownloadItemPanel itemPanel) {

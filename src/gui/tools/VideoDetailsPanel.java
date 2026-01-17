@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URI;
 
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -201,68 +202,59 @@ public class VideoDetailsPanel extends JPanel {
     	});
     }
 
-    private void openLocalFile(Video video) {
-        try {
-            ConfigManager cfg = new ConfigManager();
-            String baseDownloadPath = cfg.getDownloadPath();
-
-            if (baseDownloadPath == null || baseDownloadPath.isBlank()) {
-                System.err.println("Download path not configured");
-                return;
-            }
-
-            String safeTitle = TubeUtils.sanitizeFilename(video.getTitle());
-            File mp4 = new File(baseDownloadPath + File.separator + safeTitle + ".mp4");
-            File mp3 = new File(baseDownloadPath + File.separator + safeTitle + ".mp3");
-
-            File target = null;
-            if (mp4.exists()) {
-                target = mp4;
-            } else if (mp3.exists()) {
-                target = mp3;
-            }
-
-            if (target == null) {
-                System.err.println("Local file not found for video: " + video.getTitle());
-                javax.swing.JOptionPane.showMessageDialog(
-                        this,
-                        "Local file not found:\n" + safeTitle + ".mp4 / .mp3",
-                        "File not found",
-                        javax.swing.JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-            if (Desktop.isDesktopSupported() &&
-                Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
-                Desktop.getDesktop().open(target);
-                return;
-            }
-
-            String os = System.getProperty("os.name").toLowerCase();
-            ProcessBuilder builder;
-
-            if (os.contains("win")) {
-                builder = new ProcessBuilder("cmd", "/c", "start", "", target.getAbsolutePath());
-            } else if (os.contains("mac")) {
-                builder = new ProcessBuilder("open", target.getAbsolutePath());
-            } else {
-                builder = new ProcessBuilder("xdg-open", target.getAbsolutePath());
-            }
-
-            builder.start();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(
-                    this,
-                    "Could not open the video file.\nError: " + e.getMessage(),
-                    "Error",
-                    javax.swing.JOptionPane.ERROR_MESSAGE
-            );
+private void openLocalFile(Video video) {
+    try {
+        ConfigManager cfg = new ConfigManager();
+        String baseDownloadPath = cfg.getDownloadPath();
+        if (baseDownloadPath == null || baseDownloadPath.isBlank()) {
+            System.err.println("Download path not configured");
+            return;
         }
-    }
 
+        String safeTitle = TubeUtils.sanitizeFilename(video.getTitle());
+        
+        File mp4 = new File(baseDownloadPath + File.separator + safeTitle + ".mp4");
+        File mp3 = new File(baseDownloadPath + File. separator + safeTitle + ".mp3");
+
+        if (!mp4.exists() && !mp3.exists()) {
+            File baseDir = new File(baseDownloadPath);
+            File[] subdirs = baseDir.listFiles(File::isDirectory);
+            if (subdirs != null) {
+                for (File subdir : subdirs) {
+                    mp4 = new File(subdir, safeTitle + ".mp4");
+                    mp3 = new File(subdir, safeTitle + ".mp3");
+                    if (mp4.exists() || mp3.exists()) {
+                        break; // encontrado
+                    }
+                }
+            }
+        }
+
+        File target = null;
+        if (mp4.exists()) {
+            target = mp4;
+        } else if (mp3.exists()) {
+            target = mp3;
+        }
+
+        if (target != null && target.exists()) {
+            if (java.awt.Desktop.isDesktopSupported()) {
+                java.awt.Desktop.getDesktop().open(target);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                "Local file not found:\n" + safeTitle + ".mp4 / . mp3",
+                "File not found",
+                JOptionPane.WARNING_MESSAGE);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this,
+            "Error opening file: " + e.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
     // openWebpage ya no se usa para el título, pero lo dejo por si lo necesitásemos en otro sitio
     private void openWebpage(String urlString) {
         try {
