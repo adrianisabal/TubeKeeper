@@ -101,7 +101,7 @@ public class TubeUtils {
       for(String videoLink : pl.getVideos()){
         TubeThread thread = new TubeThread(videoLink, currentPanel, downloadPath);
         thread.start();
-        TubeThread.sleep(100);
+        TubeThread.sleep(3000);
       }
     } catch (Exception e) {
       e.printStackTrace();

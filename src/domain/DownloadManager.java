@@ -108,8 +108,10 @@ public class DownloadManager {
     
     private Video downloadVideo(String url, Playlist playlist) {
         try {
-	    	Youtube yt = new Youtube(url);
-        TubeUtils.downloadVideo(url, downloadsPanel);
+	    	  Youtube yt = new Youtube(url);
+          if (playlist == null) {
+              TubeUtils.downloadVideo(url, downloadsPanel);
+          }
 	        Stream bestStream = yt.streams().getHighestResolution();
 	        Video video = new Video(yt, bestStream);
           ConfigManager cfg = new ConfigManager();
@@ -132,7 +134,7 @@ public class DownloadManager {
     private Playlist downloadPlaylist(String url) {
     	try {
         TubeUtils.downloadPlaylist(url, downloadsPanel);
-    	com.github.felipeucelli.javatube.Playlist apiPlaylist = new com.github.felipeucelli.javatube.Playlist(url);
+    	  com.github.felipeucelli.javatube.Playlist apiPlaylist = new com.github.felipeucelli.javatube.Playlist(url);
         Playlist playlist = new Playlist(apiPlaylist);
         ConfigManager cfg = new ConfigManager();
         if (cfg.isSaveHistory()) {
