@@ -6,11 +6,18 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Window;
 import java.awt.Font;
+import java.awt.Component;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.SwingConstants;
+import javax.swing.JOptionPane;
 
 import domain.Playlist;
 import domain.Video;
@@ -28,6 +36,7 @@ import utils.ImageUtils;
 import gui.MainFrame;
 import gui.tools.DefaultButton;
 import db.VideoDAO;
+import io.ConfigManager;
 
 public class PlaylistView extends View {
 	
@@ -56,10 +65,9 @@ public class PlaylistView extends View {
 	        ((MainFrame) w).showScreen(MainFrame.VIEW_PLAYLISTS);
 	      }
 	    });
-	    Vector<String> headers = new Vector<>(Arrays.asList("#", "Thumbnail", "Title", "Author", "VIDEO_HIDDEN"));  
-      this.playlistDataModel = new DefaultTableModel(new Vector<>(), headers) 
-      {
 
+	    Vector<String> headers = new Vector<>(Arrays.asList("#", "Thumbnail", "Title", "Author", "VIDEO_HIDDEN"));  
+      this.playlistDataModel = new DefaultTableModel(new Vector<>(), headers) {
 		    @Override
 		    public boolean isCellEditable(int row, int column) {
 		       return false;
@@ -68,10 +76,10 @@ public class PlaylistView extends View {
 
       List<Video> videos = loadVideosFromDatabase(playlist.getDbId());
 	  for (Video v : videos) {
-        playlistDataModel.addRow(new Object[]{videos.indexOf(v) + 1, v.getThumbnail(), v.getTitle(), v.getAuthor()}); 
+        playlistDataModel.addRow(new Object[]{videos.indexOf(v) + 1, v.getThumbnail(), v.getTitle(), v.getAuthor(), v}); 
       }
 	  
-	  JTable playlistTable = new JTable(playlistDataModel);
+	  playlistTable = new JTable(playlistDataModel);
 	  
       playlistTable.setFont(DefaultButton.DEFAULT_FONT);
       playlistTable.getTableHeader().setFont(DefaultButton.DEFAULT_FONT.deriveFont(Font.BOLD));
@@ -79,6 +87,7 @@ public class PlaylistView extends View {
       playlistTable.setRowHeight(80);
       playlistTable.getColumnModel().getColumn(1).setPreferredWidth(120);
       
+      // Ocultamos la columna VIDEO_HIDDEN
       playlistTable.getColumnModel().getColumn(4).setMinWidth(0);
       playlistTable.getColumnModel().getColumn(4).setMaxWidth(0);
       playlistTable.getColumnModel().getColumn(4).setPreferredWidth(0);
@@ -86,12 +95,11 @@ public class PlaylistView extends View {
       DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
       centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
 	
-		for (int i = 0; i < playlistTable.getColumnCount(); i++) {
-			playlistTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-		}
+	  for (int i = 0; i < playlistTable.getColumnCount(); i++) {
+		  playlistTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+	  }
 
       playlistTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
-        
         @Override  
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
           JLabel label = new JLabel();
@@ -117,9 +125,36 @@ public class PlaylistView extends View {
               label.setIcon(null);
               label.setText(value != null ? value.toString() : "");
           }
-            
           return label;
         }
+      });
+
+      playlistTable.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
+          @Override
+          public Component getTableCellRendererComponent(JTable table, Object value,
+                                                         boolean isSelected, boolean hasFocus,
+                                                         int row, int column) {
+              JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+              label.setHorizontalAlignment(SwingConstants.CENTER);
+              label.setForeground(Color.BLUE.darker());
+              label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+              return label;
+          }
+      });
+
+      playlistTable.addMouseListener(new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+              int row = playlistTable.rowAtPoint(e.getPoint());
+              int col = playlistTable.columnAtPoint(e.getPoint());
+              if (row < 0) return;
+
+              if (col == 2) {
+                  int modelRow = playlistTable.convertRowIndexToModel(row);
+                  Video v = (Video) playlistDataModel.getValueAt(modelRow, 4);
+                  openLocalFileFromPlaylist(v);
+              }
+          }
       });
 
       JPanel plPanel = new JPanel(new BorderLayout());
@@ -165,4 +200,66 @@ public class PlaylistView extends View {
 	      return java.util.Collections.emptyList();
 	    }
 	  }
+
+      private void openLocalFileFromPlaylist(Video video) {
+          try {
+              ConfigManager cfg = new ConfigManager();
+              String base = cfg.getDownloadPath();
+              if (base == null || base.isBlank()) {
+                  System.err.println("Download path not configured");
+                  return;
+              }
+
+              String playlistFolder = playlist.getTitle();
+              File playlistDir = new File(base + File.separator + playlistFolder);
+              String safeTitle = video.getTitle();
+
+              File mp4 = new File(playlistDir, safeTitle + ".mp4");
+              File mp3 = new File(playlistDir, safeTitle + ".mp3");
+
+              if (!mp4.exists() && !mp3.exists()) {
+                  mp4 = new File(base + File.separator + safeTitle + ".mp4");
+                  mp3 = new File(base + File.separator + safeTitle + ".mp3");
+              }
+
+              File target = null;
+              if (mp4.exists()) {
+                  target = mp4;
+              } else if (mp3.exists()) {
+                  target = mp3;
+              }
+
+              if (target == null) {
+                  System.err.println("Local file not found for video: " + video.getTitle());
+                  JOptionPane.showMessageDialog(this,
+                          "Local file not found:\n" + safeTitle + ".mp4 / .mp3",
+                          "File not found",
+                          JOptionPane.WARNING_MESSAGE);
+                  return;
+              }
+
+              if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+                  Desktop.getDesktop().open(target);
+                  return;
+              }
+
+              String os = System.getProperty("os.name").toLowerCase();
+              ProcessBuilder builder;
+              if (os.contains("win")) {
+                  builder = new ProcessBuilder("cmd", "/c", "start", "", target.getAbsolutePath());
+              } else if (os.contains("mac")) {
+                  builder = new ProcessBuilder("open", target.getAbsolutePath());
+              } else {
+                  builder = new ProcessBuilder("xdg-open", target.getAbsolutePath());
+              }
+              builder.start();
+
+          } catch (Exception e) {
+              System.err.println("Error opening local file from playlist: " + e.getMessage());
+              JOptionPane.showMessageDialog(this,
+                      "Could not open the video file.\n" + e.getMessage(),
+                      "Error",
+                      JOptionPane.ERROR_MESSAGE);
+          }
+      }
 }
