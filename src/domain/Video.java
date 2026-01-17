@@ -2,7 +2,6 @@ package domain;
 
 import javax.swing.ImageIcon;
 
-import java.awt.Desktop;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +110,8 @@ public class Video {
     this.publishDate = youtube.getPublishDate();
     this.length = youtube.length();
     this.thumbnailUrl = youtube.getThumbnailUrl();
-    this.views = youtube.getViews();
+    
+    this.views = new Youtube(youtube.getUrl()).getViews();
     this.author = youtube.getAuthor();
 
     this.keywords.clear();

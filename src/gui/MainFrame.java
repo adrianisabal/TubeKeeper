@@ -11,6 +11,8 @@ import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.awt.Toolkit;
+
 import domain.Playlist;
 import gui.views.View;
 import io.ConfigManager;
@@ -45,7 +47,7 @@ public class MainFrame extends JFrame {
         if (cfg.isManualRes()) {
           setSize(ImageUtils.parseDimension(cfg.getResolution()));
         } else {
-          setSize(1200, 800);
+          setSize(Toolkit.getDefaultToolkit().getScreenSize());
         }
         setTitle("TubeKeeper");
         setLocationRelativeTo(null);

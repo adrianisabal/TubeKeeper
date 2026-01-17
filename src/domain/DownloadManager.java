@@ -9,6 +9,7 @@ import db.VideoDAO;
 import db.PlaylistDAO;
 import gui.tools.DownloadItemPanel;
 import gui.tools.DownloadsPanel;
+import io.ConfigManager;
 import utils.LinkType;
 import utils.TubeUtils;
 
@@ -111,15 +112,15 @@ public class DownloadManager {
         TubeUtils.downloadVideo(url, downloadsPanel);
 	        Stream bestStream = yt.streams().getHighestResolution();
 	        Video video = new Video(yt, bestStream);
-
-	        if (playlist != null) {
-	        	playlist.getVideos().add(video);
-	        	videoDAO.insert(video, playlist.getDbId());
-	        	
-	        } else {
-	        	videoDAO.insert(video, null);
-	        }
-	        
+          ConfigManager cfg = new ConfigManager();
+          if (cfg.isSaveHistory()) {
+	          if (playlist != null) {
+	        	  playlist.getVideos().add(video);
+	          	videoDAO.insert(video, playlist.getDbId()); 
+	          } else {
+	        	  videoDAO.insert(video, null);
+	          }
+          }
 	        return video;
 	        
         } catch (Exception e) {
@@ -133,10 +134,11 @@ public class DownloadManager {
         TubeUtils.downloadPlaylist(url, downloadsPanel);
     	com.github.felipeucelli.javatube.Playlist apiPlaylist = new com.github.felipeucelli.javatube.Playlist(url);
         Playlist playlist = new Playlist(apiPlaylist);
-        
-        int playlistId = playlistDAO.insert(playlist);
-        playlist.setDbId(playlistId);
-        
+        ConfigManager cfg = new ConfigManager();
+        if (cfg.isSaveHistory()) {
+          int playlistId = playlistDAO.insert(playlist);
+          playlist.setDbId(playlistId);
+        }
         return playlist;
         
         } catch (Exception e) {
@@ -163,5 +165,4 @@ public class DownloadManager {
         if (title.length() <= MAX_TITLE_LENGTH) return title;
         return title.substring(0, MAX_TITLE_LENGTH - 3) + "...";
     }
-
 }
