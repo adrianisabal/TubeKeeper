@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
@@ -28,6 +27,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
+import utils.TubeUtils;
 import gui.tools.SearchBar;
 import gui.tools.VideoDetailsPanel;
 import domain.Video;
@@ -170,10 +170,10 @@ public class DownloadsView extends View {
 	        String downloadPath = loadDownloadPath();
 	        if (downloadPath == null) return false;
 
-	        String title = video.getTitle();
+	        String title = TubeUtils.sanitizeFilename(video.getTitle());
 	        
-	        String pathMp4 = downloadPath + File.separator + title + ".mp4";
-	        String pathMp3 = downloadPath + File.separator + title + ".mp3";
+          String pathMp4 = downloadPath + File.separator + title + ".mp4";
+          String pathMp3 = downloadPath + File.separator + title + ".mp3";
 
 	        File fileMp4 = new File(pathMp4);
 	        File fileMp3 = new File(pathMp3);

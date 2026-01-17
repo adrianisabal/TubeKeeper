@@ -32,7 +32,7 @@ import javax.swing.JOptionPane;
 import domain.Playlist;
 import domain.Video;
 import utils.ImageUtils;
-
+import utils.TubeUtils;
 import gui.MainFrame;
 import gui.tools.DefaultButton;
 import db.VideoDAO;
@@ -212,8 +212,8 @@ public class PlaylistView extends View {
 
               String playlistFolder = playlist.getTitle();
               File playlistDir = new File(base + File.separator + playlistFolder);
-              String safeTitle = video.getTitle();
-
+              
+              String safeTitle = TubeUtils.sanitizeFilename(video.getTitle());
               File mp4 = new File(playlistDir, safeTitle + ".mp4");
               File mp3 = new File(playlistDir, safeTitle + ".mp3");
 

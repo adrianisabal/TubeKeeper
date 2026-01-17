@@ -44,7 +44,9 @@ public class TubeUtils {
         ConfigManager cfg = new ConfigManager();
         String downloadPath = cfg.getDownloadPath() + File.separator;
         downloadVideo(videoLink, currentPanel, downloadPath);
-     } catch (Exception e) {}
+     } catch (Exception e) {
+       e.printStackTrace();
+     }
   }
   
   public static void downloadVideo (String videoLink, JPanel currentPanel, String downloadPath) throws Exception {
@@ -52,18 +54,20 @@ public class TubeUtils {
       ConfigManager cfg = new ConfigManager();
       String timeStamp = Long.toString(Instant.now().toEpochMilli());
       Youtube yt = new Youtube(videoLink, "ANDROID");
+      String rawTitle = yt.getTitle();
+      String safeTitle = sanitizeFilename(rawTitle);
       if (cfg.getFileType().equals("mp3")) {
-        Files.deleteIfExists(Paths.get(downloadPath + File.separator + yt.getTitle() + ".mp3"));
+        Files.deleteIfExists(Paths.get(downloadPath + File.separator + safeTitle + ".mp3"));
         String tmpName = downloadPath + File.separator + "audio" + timeStamp + ".mp4";
         yt.streams().getOnlyAudio().download(downloadPath, "audio" + timeStamp);
         ProcessBuilder pb = new ProcessBuilder(FFmpegManager.getFFmpegPath(), "-i", tmpName,
-             downloadPath + yt.getTitle() + ".mp3");
+             downloadPath + safeTitle + ".mp3");
         Process p = pb.start();
         p.waitFor();
         Files.delete(Paths.get(tmpName));
 
       } else {
-        Files.deleteIfExists(Paths.get(downloadPath + yt.getTitle() + ".mp4"));
+        Files.deleteIfExists(Paths.get(downloadPath + safeTitle + ".mp4"));
         if (cfg.getPolicy().equals("Light (360p max, no FFmpeg)")) {
           yt.streams().getDefaultResolution().download(downloadPath);
 
@@ -80,13 +84,14 @@ public class TubeUtils {
           yt.streams().getOnlyAudio().download(tempPath, "audio");
           ProcessBuilder pb = new ProcessBuilder(FFmpegManager.getFFmpegPath(), "-i", tempPath + "video.mp4",
                                                  "-i", tempPath + "audio.mp4", "-c", "copy",
-                                                 downloadPath + yt.getTitle() + ".mp4");
+                                                 downloadPath + safeTitle + ".mp4");
           Process p = pb.start();
           p.waitFor();
           deleteFilesRecursively(new File(tempPath));
         }
       }
     } catch (Exception e) {
+      e.printStackTrace();
       throw e;
     }
   }
@@ -131,5 +136,9 @@ public class TubeUtils {
     } catch (Exception e) {
       return;
     }
+  }
+
+  public static String sanitizeFilename(String name) {
+    return name.replaceAll("[\\\\/:*?\"<>|]", "_").trim();
   }
 }

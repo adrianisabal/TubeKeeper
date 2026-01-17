@@ -85,6 +85,7 @@ public class DownloadManager {
                 }
 
             } catch (Exception e) {
+              e.printStackTrace();
             	String errorTitle = String.format("Error: %s", e.getMessage());
                 itemPanel.setTitle(truncateTitle(errorTitle), errorTitle);
             	itemPanel.getTitleLabel().setToolTipText(e.getMessage());

@@ -29,6 +29,7 @@ import javax.swing.JButton;
 import domain.Video;
 import io.ConfigManager;
 import utils.ImageUtils;
+import utils.TubeUtils;
 
 public class VideoDetailsPanel extends JPanel {
 	
@@ -210,7 +211,7 @@ public class VideoDetailsPanel extends JPanel {
                 return;
             }
 
-            String safeTitle = video.getTitle();
+            String safeTitle = TubeUtils.sanitizeFilename(video.getTitle());
             File mp4 = new File(baseDownloadPath + File.separator + safeTitle + ".mp4");
             File mp3 = new File(baseDownloadPath + File.separator + safeTitle + ".mp3");
 
