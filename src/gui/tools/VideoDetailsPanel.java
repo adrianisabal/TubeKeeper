@@ -175,7 +175,6 @@ public class VideoDetailsPanel extends JPanel {
         String sizeStr = video.formatSize(video.getFileSize());
         String viewsStr = video.formatViews(video.getViews());
         
-        // Título se muestra como “link”
         String titleDisplay = "<html><font color='blue'><u>" + video.getTitle() + "</u></font></html>";
         
         tableModel.addRow(new Object[]{"Title", titleDisplay});
@@ -194,8 +193,6 @@ public class VideoDetailsPanel extends JPanel {
                 int row = detailsTable.rowAtPoint(e.getPoint());
                 int col = detailsTable.columnAtPoint(e.getPoint());
                 
-                // Antes: abría la URL remota con openWebpage(currentVideoUrl)
-                // Ahora: abrimos el archivo local final con el reproductor por defecto
                 if (row == 0 && col == 1 && currentVideo != null) {
                     openLocalFile(currentVideo);
                 }
@@ -203,11 +200,6 @@ public class VideoDetailsPanel extends JPanel {
     	});
     }
 
-    /**
-     * Abre el fichero local asociado al vídeo (mp4 o mp3) con el reproductor por defecto.
-     * Se basa en la ruta de descarga configurada en ConfigManager y en el título del vídeo,
-     * igual que se hace en DownloadsView.deletePhysicalFile.
-     */
     private void openLocalFile(Video video) {
         try {
             ConfigManager cfg = new ConfigManager();
@@ -246,7 +238,6 @@ public class VideoDetailsPanel extends JPanel {
                 return;
             }
 
-            // Fallback según SO
             String os = System.getProperty("os.name").toLowerCase();
             ProcessBuilder builder;
 
@@ -271,7 +262,7 @@ public class VideoDetailsPanel extends JPanel {
         }
     }
 
-    // openWebpage ya no se usa para el título, pero lo dejo por si lo quieres en otro sitio
+    // openWebpage ya no se usa para el título, pero lo dejo por si lo necesitásemos en otro sitio
     private void openWebpage(String urlString) {
         try {
             if (Desktop.isDesktopSupported() &&

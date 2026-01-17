@@ -99,7 +99,6 @@ public class PlaylistView extends View {
 		  playlistTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 	  }
 
-      // Miniaturas
       playlistTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
         @Override  
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -130,7 +129,6 @@ public class PlaylistView extends View {
         }
       });
 
-      // Título con aspecto de enlace
       playlistTable.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
           @Override
           public Component getTableCellRendererComponent(JTable table, Object value,
@@ -144,7 +142,6 @@ public class PlaylistView extends View {
           }
       });
 
-      // Listener para abrir el fichero local al hacer clic en el título
       playlistTable.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
@@ -152,7 +149,6 @@ public class PlaylistView extends View {
               int col = playlistTable.columnAtPoint(e.getPoint());
               if (row < 0) return;
 
-              // Solo reaccionar si clican en la columna del título
               if (col == 2) {
                   int modelRow = playlistTable.convertRowIndexToModel(row);
                   Video v = (Video) playlistDataModel.getValueAt(modelRow, 4);
@@ -205,10 +201,6 @@ public class PlaylistView extends View {
 	    }
 	  }
 
-      /**
-       * Intenta abrir el fichero local asociado al vídeo (mp4 o mp3), primero en la carpeta
-       * de la playlist (descargas de playlists), y si no está, en la carpeta general de descargas.
-       */
       private void openLocalFileFromPlaylist(Video video) {
           try {
               ConfigManager cfg = new ConfigManager();
@@ -226,7 +218,6 @@ public class PlaylistView extends View {
               File mp3 = new File(playlistDir, safeTitle + ".mp3");
 
               if (!mp4.exists() && !mp3.exists()) {
-                  // Fallback: carpeta general de descargas
                   mp4 = new File(base + File.separator + safeTitle + ".mp4");
                   mp3 = new File(base + File.separator + safeTitle + ".mp3");
               }
