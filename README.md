@@ -43,27 +43,8 @@ NO! WE HAVE A TEAM (students) WORKING (being enslaved) HAPPILY (no) ON IT!
 3 people have developed this project (to the date of writing this): @adrianisabal, @bombitron and me, @fragi0.
 
 Of course couldn't not mention the creator of the API Javatube (don't search that word alone in Google): Felipe Ucelli (hope I wrote it right).
-You have his links below:
- 
- 
- 
- 
- 
- 
-  
- 
- 
- 
-More below:
- 
- 
- 
- 
- 
- 
- 
- 
-Okay here: 
+You have his links here:
+ 
 
     API: https://github.com/felipeucelli/Javatube
 
