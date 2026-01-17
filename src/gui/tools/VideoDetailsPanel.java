@@ -2,16 +2,15 @@ package gui.tools;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -28,6 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import domain.Video;
+import io.ConfigManager;
 import utils.ImageUtils;
 
 public class VideoDetailsPanel extends JPanel {
@@ -87,7 +87,6 @@ public class VideoDetailsPanel extends JPanel {
         detailsTable.setRowSelectionAllowed(false);
         detailsTable.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 
-
         configureRenderer();
         detailsTable.getTableHeader().setVisible(false);
         configureLinkListener();
@@ -123,7 +122,7 @@ public class VideoDetailsPanel extends JPanel {
             		}
                 } 
                 if (column == 0) {
-                setHorizontalAlignment(SwingConstants.CENTER);
+                    setHorizontalAlignment(SwingConstants.CENTER);
                 } else {
                 	setHorizontalAlignment(SwingConstants.LEFT);
                 }
@@ -159,31 +158,32 @@ public class VideoDetailsPanel extends JPanel {
         }
         
         btnDelete.setVisible(true);
-        currentVideoUrl = video.getUrl();
+        currentVideoUrl = video.getUrl(); // ya no la usaremos para abrir, pero la dejamos por si se quiere mostrar
 
-    try {
-        ImageIcon resized = ImageUtils.resizeImageIcon(video.getThumbnail(), 200, 200);
-        thumbnailContainer.setIcon(resized);
-        thumbnailContainer.setText(null);
-    } catch (Exception e) {
-        thumbnailContainer.setIcon(null);
-        thumbnailContainer.setText("No Image");
-    }
+        try {
+            ImageIcon resized = ImageUtils.resizeImageIcon(video.getThumbnail(), 200, 200);
+            thumbnailContainer.setIcon(resized);
+            thumbnailContainer.setText(null);
+        } catch (Exception e) {
+            thumbnailContainer.setIcon(null);
+            thumbnailContainer.setText("No Image");
+        }
 
-    tableModel.setRowCount(0);
+        tableModel.setRowCount(0);
 
-    String durationStr = video.formatDuration(video.length()); 
-    String sizeStr = video.formatSize(video.getFileSize());
-    String viewsStr = video.formatViews(video.getViews());
-    
-    String titleDisplay = "<html><font color='blue'><u>" + video.getTitle() + "</u></font></html>"; // ChatGPT Generated Line
-    
-    tableModel.addRow(new Object[]{"Title", titleDisplay});
-    tableModel.addRow(new Object[]{"Author", video.getAuthor()});
-    tableModel.addRow(new Object[]{"Published", video.getPublishDate()});
-    tableModel.addRow(new Object[]{"Duration", durationStr});
-    tableModel.addRow(new Object[]{"Views", viewsStr});
-    tableModel.addRow(new Object[]{"Size", sizeStr});
+        String durationStr = video.formatDuration(video.length()); 
+        String sizeStr = video.formatSize(video.getFileSize());
+        String viewsStr = video.formatViews(video.getViews());
+        
+        // Título se muestra como “link”
+        String titleDisplay = "<html><font color='blue'><u>" + video.getTitle() + "</u></font></html>";
+        
+        tableModel.addRow(new Object[]{"Title", titleDisplay});
+        tableModel.addRow(new Object[]{"Author", video.getAuthor()});
+        tableModel.addRow(new Object[]{"Published", video.getPublishDate()});
+        tableModel.addRow(new Object[]{"Duration", durationStr});
+        tableModel.addRow(new Object[]{"Views", viewsStr});
+        tableModel.addRow(new Object[]{"Size", sizeStr});
     }
     
     
@@ -194,15 +194,84 @@ public class VideoDetailsPanel extends JPanel {
                 int row = detailsTable.rowAtPoint(e.getPoint());
                 int col = detailsTable.columnAtPoint(e.getPoint());
                 
-                if (row == 0 && col == 1 && !currentVideoUrl.isEmpty()) {
-                    openWebpage(currentVideoUrl);
+                // Antes: abría la URL remota con openWebpage(currentVideoUrl)
+                // Ahora: abrimos el archivo local final con el reproductor por defecto
+                if (row == 0 && col == 1 && currentVideo != null) {
+                    openLocalFile(currentVideo);
                 }
             }
     	});
     }
 
-    //CHAT-GTP GENERATED
+    /**
+     * Abre el fichero local asociado al vídeo (mp4 o mp3) con el reproductor por defecto.
+     * Se basa en la ruta de descarga configurada en ConfigManager y en el título del vídeo,
+     * igual que se hace en DownloadsView.deletePhysicalFile.
+     */
+    private void openLocalFile(Video video) {
+        try {
+            ConfigManager cfg = new ConfigManager();
+            String baseDownloadPath = cfg.getDownloadPath();
 
+            if (baseDownloadPath == null || baseDownloadPath.isBlank()) {
+                System.err.println("Download path not configured");
+                return;
+            }
+
+            String safeTitle = video.getTitle();
+            File mp4 = new File(baseDownloadPath + File.separator + safeTitle + ".mp4");
+            File mp3 = new File(baseDownloadPath + File.separator + safeTitle + ".mp3");
+
+            File target = null;
+            if (mp4.exists()) {
+                target = mp4;
+            } else if (mp3.exists()) {
+                target = mp3;
+            }
+
+            if (target == null) {
+                System.err.println("Local file not found for video: " + video.getTitle());
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Local file not found:\n" + safeTitle + ".mp4 / .mp3",
+                        "File not found",
+                        javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            if (Desktop.isDesktopSupported() &&
+                Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+                Desktop.getDesktop().open(target);
+                return;
+            }
+
+            // Fallback según SO
+            String os = System.getProperty("os.name").toLowerCase();
+            ProcessBuilder builder;
+
+            if (os.contains("win")) {
+                builder = new ProcessBuilder("cmd", "/c", "start", "", target.getAbsolutePath());
+            } else if (os.contains("mac")) {
+                builder = new ProcessBuilder("open", target.getAbsolutePath());
+            } else {
+                builder = new ProcessBuilder("xdg-open", target.getAbsolutePath());
+            }
+
+            builder.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Could not open the video file.\nError: " + e.getMessage(),
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    // openWebpage ya no se usa para el título, pero lo dejo por si lo quieres en otro sitio
     private void openWebpage(String urlString) {
         try {
             if (Desktop.isDesktopSupported() &&
@@ -249,6 +318,4 @@ public class VideoDetailsPanel extends JPanel {
             );
         }
     }
-
-    // END CHAT-GTP GENERATED
 }

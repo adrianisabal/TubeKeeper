@@ -109,7 +109,7 @@ public class DownloadManager {
     private Video downloadVideo(String url, Playlist playlist) {
         try {
 	    	Youtube yt = new Youtube(url);
-        TubeUtils.downloadVideo(url, downloadsPanel);
+        // TubeUtils.downloadVideo(url, downloadsPanel);
 	        Stream bestStream = yt.streams().getHighestResolution();
 	        Video video = new Video(yt, bestStream);
           ConfigManager cfg = new ConfigManager();
