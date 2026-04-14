@@ -75,7 +75,7 @@ public class TubeUtils {
     try {
       ConfigManager cfg = new ConfigManager();
       String timeStamp = Long.toString(Instant.now().toEpochMilli());
-      Youtube yt = new Youtube(videoLink, "ANDROID");
+      Youtube yt = new Youtube(videoLink);
       String rawTitle = yt.getTitle();
       String safeTitle = sanitizeFilename(rawTitle);
 

@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.felipeucelli:javatube:06b8313744'
+    implementation 'com.github.felipeucelli:javatube:352e15fb24'
     implementation 'org.json:json:20231013'
     implementation 'com.github.felipeucelli:nodejs_wrapper:c604a04b2d'
     implementation 'org.xerial:sqlite-jdbc:3.45.2.0'
